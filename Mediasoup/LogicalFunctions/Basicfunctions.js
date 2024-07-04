@@ -1,5 +1,6 @@
 const mediasoup = require("mediasoup");
 const os = require("os");
+require("dotenv").config();
 
 async function createWorker() {
   const numCores = os.cpus().length;

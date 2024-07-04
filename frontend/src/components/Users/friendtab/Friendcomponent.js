@@ -32,7 +32,7 @@ const Friendcomponent = ({ user }) => {
     <Cover>
       <div className="Profile">
         <img
-          src="https://biscord.blr1.cdn.digitaloceanspaces.com/MV5BOTEwYWFjYmItZWJmNi00MGExLWI1MjktYzRiYjJkNzhiMWIxXkEyXkFqcGdeQXNuZXNodQ@@._V1_.jpg"
+          src="https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/bucket-88dwgz/Profilepicidsc.jpg"
           alt=""
         />
         <p>{user?.users[0]?.username}</p>

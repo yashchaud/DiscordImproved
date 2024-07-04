@@ -12,16 +12,16 @@ const Servers = ({ value }) => {
         <Cover>
           {value.Serverpic ? (
             <img
-              src={`https://biscord.blr1.cdn.digitaloceanspaces.com/${value.Serverpic}`}
+              src={`https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/bucket-88dwgz/${value.Serverpic}`}
               onError={(e) => {
                 e.onerror = null;
                 e.target.src =
-                  "https://biscord.blr1.cdn.digitaloceanspaces.com/defaultdiscord.jpg";
+                  "https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/discoddefault.jpg";
                 console.log(e);
               }}
             />
           ) : (
-            <img src="https://biscord.blr1.cdn.digitaloceanspaces.com/defaultdiscord.jpg" />
+            <img src="https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/discoddefault.jpg" />
           )}
         </Cover>
       </Link>

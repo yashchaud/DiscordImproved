@@ -5,7 +5,7 @@ let socket;
 
 export const connectSocket = () => {
   if (!socket) {
-    socket = io("https://yashportfoliohub.site", {
+    socket = io("http://localhost:3001", {
       withCredentials: true,
       secure: true,
     });

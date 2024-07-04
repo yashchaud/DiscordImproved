@@ -5,8 +5,11 @@ var http = require("http");
 var { Server } = require("socket.io");
 var Socketsetup = require("./Socket");
 const cors = require("cors");
+require("dotenv").config();
 
-mongoose.connect(process.env.MongodbURL, {
+const mongoDBURI =
+  "mongodb+srv://yashc:yash123456@cluster0.xqys6ob.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+mongoose.connect(mongoDBURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -29,7 +32,7 @@ const server = app.listen(port, () => {
 server.on("error", onError);
 server.on("listening", onListening);
 const io = new Server(server, {
-  cors: { origin: "https://yashportfoliohub.site/", credentials: true },
+  cors: { origin: "http://localhost:5173", credentials: true },
   cookie: true,
 });
 

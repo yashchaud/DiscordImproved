@@ -4,14 +4,17 @@ const AWS = require("aws-sdk");
 const multer = require("multer");
 const uploadFileToS3 = require("../Middlewares/upload");
 const Channels = require("../Schema/channelSchema");
+require("dotenv").config();
 
-const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Change 'nyc3' to your space's region
+const spacesEndpoint = new AWS.Endpoint(
+  "https://s3.ap-south-1.amazonaws.com/bucket-88dwgz"
+); // Change 'nyc3' to your space's region
 const s3 = new AWS.S3({
   endpoint: spacesEndpoint,
 
   accessKeyId: process.env.ACESSKEYID,
   secretAccessKey: process.env.SECRETACCESSKEY,
-  region: "blr1", // This can stay as is, DO Spaces uses this region by default
+  region: process.env.AWS_REGION,
 });
 
 const storage = multer.memoryStorage();
@@ -69,7 +72,7 @@ const serverController = {
       // Proceed with the file upload if a file was provided
       if (req.file) {
         const params = {
-          Bucket: "biscord", // The name of your DO Space
+          Bucket: "bucket-88dwgz", // The name of your DO Space
           Key: originalname, // File name you want to save as in DO Space
           Body: buffer,
           ACL: "public-read", // Make file publicly readable
