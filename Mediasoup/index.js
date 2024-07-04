@@ -5,7 +5,9 @@ var { Server } = require("socket.io");
 var Socketsetup = require("./socket");
 const fs = require("fs");
 
-var port = normalizePort(process.env.PORT || "3002");
+const ports = 3000;
+
+var port = normalizePort(ports || "3000");
 // app.set("port", port);
 
 // const privateKey = fs.readFileSync("./sslcert/key.pem", "utf8");
