@@ -20,7 +20,8 @@ db.once("open", function () {
   console.log("Connected to MongoDB");
 });
 
-var port = normalizePort(process.env.PORT || "3001");
+const ports = 3000;
+var port = normalizePort(ports || "3001");
 // app.set("port", port);
 
 // var server = http.createServer(app);
