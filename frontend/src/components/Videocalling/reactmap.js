@@ -7,7 +7,7 @@ import webcam from "@images/webcam.svg";
 import webcamon from "@images/webcamon.svg";
 import screenshare from "@images/screenshare.svg";
 import screenshareoff from "@images/stopscreenshare.svg";
-const socket = io("https://localhost:3002", { secure: true });
+const socket = io("https://biscord.site", { secure: true });
 
 const Mainview = () => {
   const isMounted = useRef(false);

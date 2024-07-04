@@ -14,7 +14,7 @@ import webcamona from "@images/webcamona.svg";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const socket = io("http://localhost:3002", { secure: true });
+const socket = io("https://biscord.site", { secure: true });
 
 const Mainview = () => {
   const isMounted = useRef(false);
