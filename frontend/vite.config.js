@@ -44,7 +44,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://yashportfoliohub.site",
+        target: "https://www.yashportfoliohub.site",
 
         changeOrigin: true,
       },
