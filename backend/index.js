@@ -33,7 +33,7 @@ const server = app.listen(port, () => {
 server.on("error", onError);
 server.on("listening", onListening);
 const io = new Server(server, {
-  cors: { origin: "https://www.yashportfoliohub.site", credentials: true },
+  cors: { origin: "http://localhost:5173", credentials: true },
   cookie: true,
 });
 

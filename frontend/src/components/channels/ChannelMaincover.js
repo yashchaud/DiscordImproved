@@ -148,7 +148,7 @@ const Cover = styled.div`
   overflow: auto; /* Changed to auto */
   -webkit-overflow-scrolling: touch; /* Added */
   @media (max-width: 1024px) {
-    position: absolute;
+    position: sticky;
     left: 4.5rem;
     cursor: grab;
   }

@@ -13,8 +13,9 @@ import calldisconnect from "@images/calldisconnect.svg";
 import webcamona from "@images/webcamona.svg";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useParams } from "react-router-dom";
 
-const socket = io("https://biscord.site", { secure: true });
+const socket = io("http://localhost:3001", { secure: true });
 
 const Mainview = () => {
   const isMounted = useRef(false);
@@ -27,7 +28,7 @@ const Mainview = () => {
   const [ProducerRouter, SetproducerRouter] = useState([]);
   const [trackingprodu, settrackingprodu] = useState([]);
   const [consumerTracks, setConsumerTracks] = useState([]);
-  const Trackingconsumer = new Set();
+  const Trackingconsumer = useRef(new Set());
   const [consumerTrackIds, setconsumerTrackIds] = useState(new Map());
   const [screenProducer, setScreenProducer] = useState(null);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
@@ -39,10 +40,14 @@ const Mainview = () => {
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [Disconnected, setDisconnected] = useState(false);
   const container = useRef();
-  let roomName = "yash";
+
+  // Extract room name from URL parameters
+  const { id, channelId } = useParams();
+  const roomName = channelId.toString() || "default-room";
+
   let device;
   let producerTransport;
-  let consumerTransports = [];
+  let consumerTransports = useRef([]);
   let audioProducer;
   let videoProducer;
   let consumer;
@@ -78,19 +83,19 @@ const Mainview = () => {
   useEffect(() => {
     console.log(Selftrack);
   }, [Selftrack]);
+
   useEffect(() => {
     console.log("Attempting to connect to socket...");
     isMounted.current = true;
 
     if (isMounted.current) {
-      // Your logic here
-
       socket.on("connect", () => {
         console.log(`socket connected ${socket.id}`);
       });
       socket.on("connection-success", ({ socketId }) => {
         console.log(socketId);
       });
+
       const getLocalStream = () => {
         console.log("getting params");
         navigator.mediaDevices
@@ -101,7 +106,6 @@ const Mainview = () => {
               sampleRate: 44100,
               sampleSize: 16,
             },
-
             video: {
               width: {
                 min: 640,
@@ -119,7 +123,6 @@ const Mainview = () => {
           })
           .then((stream) => {
             setSelftrack(stream);
-
             if (localVideoRef.current) {
               localVideoRef.current.srcObject = stream;
               localVideoRef.current.className = `${stream.id}`;
@@ -130,14 +133,15 @@ const Mainview = () => {
             console.log(error.message);
           });
       };
+
       if (socket) {
         console.log(socket);
         getLocalStream();
       }
+
       const streamSuccess = (stream) => {
         audioParams = { track: stream.getAudioTracks()[0], ...audioParams };
         videoParams = { track: stream.getVideoTracks()[0], ...videoParams };
-
         joinRoom();
       };
 
@@ -146,9 +150,6 @@ const Mainview = () => {
           Setrouters([data.Routers[0], data.Routers[1]]);
           console.log(data.Currentindex);
           console.log(`Router RTP Capabilities... ${data.Currentindex}`);
-          // console.log(JSON.stringify(data.rtpCapabilities, null, 2))
-          // we assign to local variable and will be used when
-          // loading the client Device (see createDevice above)
           let rtpCapabilitiesa = data.Routers[data.Currentindex];
           await createDevice(rtpCapabilitiesa);
           let producerid = 1;
@@ -163,20 +164,12 @@ const Mainview = () => {
             }));
             console.log(ProducerRouter);
             console.log(ProducerRouter[producer]);
-
-            // once we have rtpCapabilities from the Router, create Device
           });
-
-          // once we have rtpCapabilities from the Router, create Device
         });
       };
 
       socket.on("new-producer", async ({ producerId, targetRouterindex }) => {
-        const alreadyConsuming = consumerTracks.some(
-          (track) => track.producerId === producerId
-        );
-
-        if (alreadyConsuming) {
+        if (Trackingconsumer.current.has(producerId)) {
           return;
         }
         signalNewConsumerTransport(producerId);
@@ -203,17 +196,15 @@ const Mainview = () => {
       const getProducers = () => {
         socket.emit("getProducers", (producerIds) => {
           console.log(producerIds);
-          // for each of the producer create a consumer
-          // producerIds.forEach(id => signalNewConsumerTransport(id))
           producerIds.forEach((id) => {
-            signalNewConsumerTransport(id);
+            if (!Trackingconsumer.current.has(id)) {
+              signalNewConsumerTransport(id);
+            }
           });
         });
       };
 
       const signalNewConsumerTransport = async (remoteProducerId) => {
-        //check if we are already consuming the remoteProducerId
-
         console.log(remoteProducerId);
         if (remoteProducerId === undefined || remoteProducerId === null) return;
         if (consumingTransports.includes(remoteProducerId)) {
@@ -221,14 +212,13 @@ const Mainview = () => {
           return;
         }
         consumingTransports.push(remoteProducerId);
+        Trackingconsumer.current.add(remoteProducerId);
 
         console.log("signaling new users", remoteProducerId);
         await socket.emit(
           "createWebRtcTransport",
           { consumer: true },
           ({ params }) => {
-            // The server sends back params needed
-            // to create Send Transport on the client side
             if (params.error) {
               console.log(params.error);
               return;
@@ -239,9 +229,6 @@ const Mainview = () => {
             try {
               consumerTransport = device.createRecvTransport(params);
             } catch (error) {
-              // exceptions:
-              // {InvalidStateError} if not loaded
-              // {TypeError} if wrong arguments.
               console.log(error);
               return;
             }
@@ -250,17 +237,12 @@ const Mainview = () => {
               "connect",
               async ({ dtlsParameters }, callback, errback) => {
                 try {
-                  // Signal local DTLS parameters to the server side transport
-                  // see server's socket.on('transport-recv-connect', ...)
                   socket.emit("transport-recv-connect", {
                     dtlsParameters,
                     serverConsumerTransportId: params.id,
                   });
-
-                  // Tell the transport that parameters were transmitted.
                   callback();
                 } catch (error) {
-                  // Tell the transport that something was wrong
                   errback(error);
                 }
               }
@@ -275,24 +257,18 @@ const Mainview = () => {
         );
       };
 
-      // Listen for new screen shares from other participants
       socket.on("new-screen-share", async ({ producerId }) => {
         console.log(
           `New screen share started by another participant: ${producerId}`
         );
-        // You might want to signal a new consumer transport creation here
         signalNewConsumerTransport(producerId);
       });
 
       const createSendTransport = () => {
-        // see server's socket.on('createWebRtcTransport', sender?, ...)
-        // this is a call from Producer, so sender = true
         socket.emit(
           "createWebRtcTransport",
           { consumer: false },
           ({ params }) => {
-            // The server sends back params needed
-            // to create Send Transport on the client side
             if (params.error) {
               console.log(params.error);
               return;
@@ -307,12 +283,9 @@ const Mainview = () => {
               "connect",
               async ({ dtlsParameters }, callback, errback) => {
                 try {
-                  console.log(dtlsParameters);
                   socket.emit("transport-connect", {
                     dtlsParameters,
                   });
-
-                  // Tell the transport that parameters were transmitted.
                   callback();
                 } catch (error) {
                   errback(error);
@@ -326,7 +299,6 @@ const Mainview = () => {
                 console.log(parameters);
 
                 try {
-                  console.log("currently producing");
                   if (
                     (parameters.kind === "audio" &&
                       audioProducerCreated &&
@@ -335,7 +307,6 @@ const Mainview = () => {
                     videoProducerCreated
                   ) {
                     console.log(`${parameters.kind} producer already exists`);
-
                     return;
                   }
 
@@ -347,11 +318,7 @@ const Mainview = () => {
                       appData: parameters.appData,
                     },
                     ({ id, producersExist }) => {
-                      // Tell the transport that parameters were transmitted and provide it with the
-                      // server side producer's id.
                       callback({ id });
-
-                      // if producers exist, then join room
                       if (producersExist) getProducers();
                     }
                   );
@@ -365,14 +332,11 @@ const Mainview = () => {
           }
         );
       };
+
       socket.on(
         "new-producer-piped",
         async ({ producerId, targetRouterindex }) => {
-          const alreadyConsuming = consumerTracks.some(
-            (track) => track.producerId === producerId
-          );
-
-          if (alreadyConsuming) {
+          if (Trackingconsumer.current.has(producerId)) {
             return;
           }
           console.log("pipedProducer ", producerId);
@@ -387,24 +351,17 @@ const Mainview = () => {
               routerRtpCapabilities: targetRouterRtpCapabilities,
             });
           }
-          if (producerId === undefined && producerId === null) {
+          if (producerId !== undefined && producerId !== null) {
             signalNewConsumerTransport(producerId);
           }
-          // Now create a consumer transport and consume the piped producer as usual
         }
       );
 
       const connectSendTransport = async () => {
-        // we now call produce() to instruct the producer transport
-        // to send media to the Router
-        // https://mediasoup.org/documentation/v3/mediasoup-client/api/#transport-produce
-        // this action will trigger the 'connect' and 'produce' events above
         if (!audioProducerCreated) {
           audioProducer = await producerTransport.produce(audioParams);
           setAudioProducerCreated(true);
           console.log(`first audio ${audioParams}`);
-
-          // ... existing handling for audioProducer
         }
 
         if (!videoProducerCreated) {
@@ -412,32 +369,22 @@ const Mainview = () => {
           console.log(`first video ${videoProducer.track.id}`);
           console.log(`first video ${videoProducer.id}`);
           setVideoProducerCreated(true);
-
-          // ... existing handling for videoProducer
         }
 
         audioProducer.on("trackended", () => {
           console.log("audio track ended");
-
-          // close audio track
         });
 
         audioProducer.on("transportclose", () => {
           console.log("audio transport ended");
-
-          // close audio track
         });
 
         videoProducer.on("trackended", () => {
           console.log("video track ended");
-
-          // close video track
         });
 
         videoProducer.on("transportclose", () => {
           console.log("video transport ended");
-
-          // close video track
         });
       };
 
@@ -446,9 +393,6 @@ const Mainview = () => {
         remoteProducerId,
         serverConsumerTransportId
       ) => {
-        // for consumer, we need to tell the server first
-        // to create a consumer based on the rtpCapabilities and consume
-        // if the router can consume, it will send back a set of params as below
         console.log("Consuming rn");
 
         socket.emit(
@@ -465,8 +409,6 @@ const Mainview = () => {
             }
 
             console.log(`Consumer Params ${params}`);
-            // then consume with the local consumer transport
-            // which creates a consumer
             settrackingprodu(params.producerId);
             const consumer = await consumerTransport.consume({
               id: params.id,
@@ -475,8 +417,8 @@ const Mainview = () => {
               rtpParameters: params.rtpParameters,
             });
 
-            consumerTransports = [
-              ...consumerTransports,
+            consumerTransports.current = [
+              ...consumerTransports.current,
               {
                 consumerTransport,
                 serverConsumerTransportId: params.id,
@@ -484,7 +426,7 @@ const Mainview = () => {
                 consumer,
               },
             ];
-            Trackingconsumer.add(params.producerId, consumer);
+            Trackingconsumer.current.add(params.producerId);
             setConsumerTracks((prevTracks) => [
               ...prevTracks,
               {
@@ -504,29 +446,45 @@ const Mainview = () => {
       };
 
       socket.on("producer-closed", ({ remoteProducerId }) => {
-        // server notification is received when a producer is closed
-        // we need to close the client-side consumer and associated transport
         setConsumerTracks((prevTracks) =>
-          prevTracks.filter((track) => track.id !== remoteProducerId)
+          prevTracks.filter((track) => track.producerId !== remoteProducerId)
         );
-        const producerToClose = consumerTransports.find(
+        const producerToClose = consumerTransports.current.find(
           (transportData) => transportData.producerId === remoteProducerId
         );
-        producerToClose.consumerTransport.close();
-        producerToClose.consumer.close();
-
-        // remove the video div element
+        if (producerToClose) {
+          producerToClose.consumerTransport.close();
+          producerToClose.consumer.close();
+        }
+        consumerTransports.current = consumerTransports.current.filter(
+          (transportData) => transportData.producerId !== remoteProducerId
+        );
       });
 
       socket.on("connect_error", (error) => {
         console.error("Socket connection error:", error);
       });
     }
+    socket.on("disconnect", () => {
+      console.log("socket disconnected");
+      setDisconnected(true);
+    });
+
     return () => {
       isMounted.current = false;
       socket.off("connect");
-
       socket.disconnect();
+
+      // Clean up tracks and transports
+      if (producerTransportRef.current) {
+        producerTransportRef.current.close();
+      }
+      consumerTransports.current.forEach((transport) => {
+        transport.consumerTransport.close();
+        transport.consumer.close();
+      });
+      setConsumerTracks([]);
+      setDisconnected(true);
     };
   }, []);
 
@@ -547,17 +505,11 @@ const Mainview = () => {
       return;
     }
     screenProducer.close();
-
     setScreenProducer(null);
     setIsScreenSharing(false);
-
     socket.emit("producer-close", {
       producerId: screenProducer.id,
     });
-    setScreenProducer(null);
-    setIsScreenSharing(false);
-    // Optionally, inform other participants that screen sharing has stopped.
-    // This can be done via your signaling server (socket.io in your case).
   };
 
   const startScreenSharing = async () => {
@@ -570,7 +522,6 @@ const Mainview = () => {
       return;
     }
     try {
-      // Capture the screen using the Screen Capture API
       const stream = await navigator.mediaDevices.getDisplayMedia({
         video: {
           width: 1920,
@@ -579,18 +530,10 @@ const Mainview = () => {
         audio: true,
       });
       const [track] = stream.getVideoTracks();
-      console.log(track);
-
-      // Use the same producerTransport to produce the screen share stream.
-      // This assumes you have a producerTransport set up similarly to how
-      // you've set up for audio and video streams.
-      console.log(producerTransportRef.current);
       const screenShareProducer = await producerTransportRef.current.produce({
         track,
-        // Additional params...
       });
 
-      console.log("Screensharecreated", screenProducer);
       setScreenProducer(screenShareProducer);
       setIsScreenSharing(true);
 
@@ -609,19 +552,11 @@ const Mainview = () => {
 
   const toggleScreenShare = async () => {
     if (isScreenSharing) {
-      // Stop screen sharing logic
-      // Additional l  ogic to stop screen sharing
       stopScreenSharing();
     } else {
-      // Start screen sharing logic
-      // Additional logic to start screen sharing
       startScreenSharing();
     }
   };
-  // Dynamically manage the grid items
-  const [items, setItems] = useState(
-    Array.from({ length: 2 }, (_, i) => i + 1)
-  ); // Initial 7 items
 
   const startWebcam = async () => {
     if (!producerTransportRef.current) {
@@ -639,11 +574,10 @@ const Mainview = () => {
   };
 
   const toggleWebcam = () => {
-    // Ensure the stream exists and has video tracks
     if (Selftrack && Selftrack.getVideoTracks().length > 0) {
       const videoTrack = Selftrack.getVideoTracks()[0];
-      videoTrack.enabled = !videoTrack.enabled; // Toggle the enabled state of the track
-      setiswebcam(videoTrack.enabled); // Update state to reflect the current status
+      videoTrack.enabled = !videoTrack.enabled;
+      setiswebcam(videoTrack.enabled);
     }
   };
 
@@ -652,24 +586,22 @@ const Mainview = () => {
     socket.off("connect");
     socket.disconnect();
     console.log("Socket disconnected.");
-    producerTransportRef.current.close();
-    consumerTransports.forEach((transport) => {
-      transport.close();
+    if (producerTransportRef.current) {
+      producerTransportRef.current.close();
+    }
+    consumerTransports.current.forEach((transport) => {
+      transport.consumerTransport.close();
+      transport.consumer.close();
     });
     console.log("Transports closed.");
-    peers.forEach((peer) => {
-      peer.close();
-    });
-    console.log("Peers closed.");
     setDisconnected(true);
   };
 
   const toggleMuteAudio = () => {
-    // Ensure the stream exists and has audio tracks
     if (Selftrack && Selftrack.getAudioTracks().length > 0) {
       const audioTrack = Selftrack.getAudioTracks()[0];
-      audioTrack.enabled = !audioTrack.enabled; // Toggle the enabled state of the track
-      setIsAudioMuted(!audioTrack.enabled); // Update state to reflect the current status
+      audioTrack.enabled = !audioTrack.enabled;
+      setIsAudioMuted(!audioTrack.enabled);
     }
   };
 
@@ -762,7 +694,7 @@ const Mainview = () => {
                   serverConsumerId={trackData.serverConsumerId}
                   track={trackData.consumer.track}
                   kind={trackData.kind}
-                  consumerTransports={consumerTransports}
+                  consumerTransports={consumerTransports.current}
                   socket={socket}
                   Selftrack={Selftrack}
                 />
@@ -811,6 +743,7 @@ const Mainview = () => {
 };
 
 export default Mainview;
+
 const Buttonrefresh = styled.div`
   display: flex;
   justify-content: center;

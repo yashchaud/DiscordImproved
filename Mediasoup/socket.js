@@ -12,65 +12,9 @@ const {
   pipeProducersBetweenRouters,
 } = require("./LogicalFunctions/Basicfunctions");
 
-// function getCpuInfo() {
-//   return os.cpus().map((cpu) => {
-//     const times = cpu.times;
-//     return {
-//       idle: times.idle,
-//       total: Object.keys(times).reduce((acc, key) => acc + times[key], 0),
-//     };
-//   });
-// }
-
-// function calculateCpuUsage(startMeasurements, endMeasurements) {
-//   return startMeasurements.map((start, i) => {
-//     const end = endMeasurements[i];
-//     const idleDiff = end.idle - start.idle;
-//     const totalDiff = end.total - start.total;
-//     const usagePercentage =
-//       totalDiff === 0 ? 0 : 100 * (1 - idleDiff / totalDiff);
-//     return Number(usagePercentage.toFixed(2));
-//   });
-// }
-
-// // Sample usage
-// let startMeasurements = getCpuInfo();
-
 setInterval(() => {
-  // let endMeasurements = getCpuInfo();
-  // let usagePercentages = calculateCpuUsage(startMeasurements, endMeasurements);
-  // console.log("CPU Usage (%):", usagePercentages);
-  // // Send this data to your broker here
-  // // e.g., sendCpuUsageData(usagePercentages);
-  // startMeasurements = endMeasurements; // Prepare for the next interval
+  // CPU Usage monitoring code...
 }, 1000); // Every second
-
-// function generatePrimes(n) {
-//   const primes = [];
-//   for (let num = 2; num <= n; num++) {
-//       let isPrime = true;
-//       for (let i = 2; i <= Math.sqrt(num); i++) {
-//           if (num % i === 0) {
-//               isPrime = false;
-//               break;
-//           }
-//       }
-//       if (isPrime) {
-//           primes.push(num);
-//       }
-//   }
-//   return primes;
-// }
-
-// const n = 100000; // Adjust the range as per your requirement
-// setInterval(() => {
-//     generatePrimes(n);
-//     generatePrimes(n);
-//     generatePrimes(n);
-//     generatePrimes(n);
-//     generatePrimes(n);
-
-// }, 100);
 
 module.exports = async function (io) {
   const roomQueue = new AwaitQueue();
@@ -244,7 +188,7 @@ module.exports = async function (io) {
         if (peers.has(producerData.socketId)) {
           const producerSocket = peers.get(producerData.socketId).socket;
           console.log("Inform", producerData.producer.id, id);
-          socket.broadcast.emit("new-producer", {
+          socket.broadcast.to(roomName).emit("new-producer", {
             producerId: id,
             targetRouterindex: 0,
           });
@@ -285,7 +229,7 @@ module.exports = async function (io) {
           }
           console.log("event is being triggered", pipeConsumer);
 
-          await io.emit("new-producer-piped", {
+          await io.to(socket.roomName).emit("new-producer-piped", {
             producerId: pipeConsumer.id,
             targetRouterindex: Currentindex,
           });
@@ -422,6 +366,8 @@ module.exports = async function (io) {
           isAdmin: false,
         },
       });
+      socket.roomName = roomName; // Add room name to the socket
+      socket.join(roomName); // Join the socket to the room
       let rpa = router1.rtpCapabilities;
       Remoteindex += 1;
       callback({
@@ -497,10 +443,6 @@ module.exports = async function (io) {
           }
         }),
         pipeExistingProducersToTargetRouter(socket)
-
-        // alreadyPipedProducer.forEach((producer) => {
-        //   producerList.push(producer);
-        // })
       );
 
       console.log(typeof producerList); // Logging the type of producerList
@@ -626,7 +568,7 @@ module.exports = async function (io) {
                 );
 
                 // Broadcast this producer ID to all other clients in the same room, except the sender
-                io.emit("new-screen-share", { producerId });
+                io.to(roomName).emit("new-screen-share", { producerId });
               }
             );
 
@@ -743,7 +685,7 @@ module.exports = async function (io) {
       console.log(Peerstrack);
       if (peers.get(socket.id)) {
         const roomName = peers.get(socket.id).roomName;
-
+        socket.leave(roomName);
         peers.delete(socket.id);
       }
     });
