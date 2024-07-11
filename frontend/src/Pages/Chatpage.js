@@ -65,7 +65,7 @@ const Cover = styled.div`
   }
 `;
 const Spacer = styled.div`
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     width: 7.5rem;
   }
 
@@ -78,5 +78,5 @@ const Spacer = styled.div`
   }
   @media (max-width: 375px) {
     width: 25rem;
-  }
+  } */
 `;

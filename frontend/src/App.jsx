@@ -23,6 +23,7 @@ import messagea from "./components/images/messageas.svg";
 import discordlogo from "./components/images/Discordlogo.svg";
 import Swipeable from "./components/Helpers/Swipeable";
 import { Toaster, toast } from "sonner";
+import { setDropdownflag } from "@/Redux/sessionSlice";
 
 import "./globals.css";
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
   }
   useEffect(() => {
     connectSocket();
+
     toast(
       "You can swipe or click on server button to toggle between servers and messages",
       {

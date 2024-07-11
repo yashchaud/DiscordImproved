@@ -25,12 +25,16 @@ const ChannelMaincover = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const { Categoryflag } = useSelector((state) => state.counterSlice);
+  const { createchannelflag } = useSelector((state) => state.counterSlice);
   const { togglesidebar } = useSelector((state) => state.counterSlice);
   const { Dropdownflag } = useSelector((state) => state.counterSlice);
+  const [Localsidebar, setLocalsidebar] = useState(true);
+
   const [isopen, setisopen] = useState(true);
   const [noncategory, setnoncategory] = useState();
   const container = useRef();
   const { contextSafe } = useGSAP({ scope: container });
+
   useEffect(() => {
     const handleResize = () => {
       setCurrentwidth(window.innerWidth);
@@ -85,18 +89,48 @@ const ChannelMaincover = () => {
 
     { scope: container.current, dependencies: [togglesidebar] }
   );
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentwidth(window.innerWidth);
+      console.log(Currentwidth);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [window.innerWidth, Currentwidth]);
+
+  useEffect(() => {
+    if (Currentwidth < 768 && Categoryflag) {
+      setLocalsidebar(false);
+      return;
+    }
+    if (Currentwidth < 768 && Categoryflag) {
+      setLocalsidebar(false);
+      return;
+    }
+    if (Currentwidth < 768) {
+      setLocalsidebar(true);
+      return;
+    }
+    setLocalsidebar(togglesidebar);
+  }, [Currentwidth, togglesidebar, Categoryflag, createchannelflag]);
 
   return (
     <>
-      {togglesidebar && (
-        <Cover ref={container}>
+      {Localsidebar && (
+        <Cover onClick={() => dispatch(setDropdownflag(false))} ref={container}>
           <Swipeable
             styles={{ cursor: "grab" }}
             onSwipeRight={right}
             onSwipeLeft={left}
           >
             <Servername
-              onClick={() => dispatch(setDropdownflag(!Dropdownflag))}
+              onClick={(event) => {
+                event.stopPropagation();
+                dispatch(setDropdownflag(!Dropdownflag));
+              }}
             >
               <div>
                 <h4>Yash's server</h4>
@@ -156,7 +190,7 @@ const Cover = styled.div`
     min-width: 15rem;
   }
   background-color: #2b2d31;
-  z-index: 3141234;
+  z-index: 3141234213123;
   .Dropable {
     min-height: 1rem;
   }

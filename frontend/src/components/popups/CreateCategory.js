@@ -6,7 +6,7 @@ import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { setcreateserver } from "@Redux/sessionSlice";
-import { setCategoryflag } from "@Redux/sessionSlice";
+import { setCategoryflag, settogglesidebar } from "@Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -50,7 +50,10 @@ const CreateCategory = () => {
           <div>
             <div className="cross">
               <img
-                onClick={() => dispatch(setCategoryflag(false))}
+                onClick={() => {
+                  dispatch(settogglesidebar(true));
+                  dispatch(setCategoryflag(false));
+                }}
                 src={cross}
                 alt=""
               />
@@ -68,7 +71,14 @@ const CreateCategory = () => {
             </div>
           </div>
           <div className="bottomdiv">
-            <p onClick={() => dispatch(setCategoryflag(false))}>Cancel</p>
+            <p
+              onClick={() => {
+                dispatch(settogglesidebar(true));
+                dispatch(setCategoryflag(false));
+              }}
+            >
+              Cancel
+            </p>
             <button onClick={HandleSubmit}>Create Category</button>
           </div>
         </Maincontainer>

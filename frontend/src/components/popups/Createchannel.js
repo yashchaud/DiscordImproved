@@ -4,7 +4,11 @@ import cross from "../images/X.svg";
 import hash from "../images/hash.svg";
 import voice from "../images/voice.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { setcreatechannelflag, setCategoryid } from "@/Redux/sessionSlice";
+import {
+  setcreatechannelflag,
+  setCategoryid,
+  settogglesidebar,
+} from "@/Redux/sessionSlice";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
@@ -102,7 +106,10 @@ const Createchannel = () => {
               <div className="title">
                 <h1>Create Channel</h1>
                 <img
-                  onClick={() => dispatch(setcreatechannelflag(false))}
+                  onClick={() => {
+                    dispatch(settogglesidebar(true));
+                    dispatch(setcreatechannelflag(false));
+                  }}
                   src={cross}
                   alt=""
                 />
@@ -181,7 +188,15 @@ const Createchannel = () => {
               </div>
             </div>
             <div className="Bottombuttons">
-              <button className="Cancel">Cancel</button>
+              <button
+                onClick={() => {
+                  dispatch(settogglesidebar(true));
+                  dispatch(setcreatechannelflag(false));
+                }}
+                className="Cancel"
+              >
+                Cancel
+              </button>
               <button onClick={handlesubmit} className="Create">
                 Create Channel
               </button>
@@ -275,7 +290,7 @@ const Cover = styled.div`
   background-color: #0e0f10ad;
   position: absolute;
   top: 0;
-  z-index: 100000000;
+  z-index: 100002222222222222220000;
   display: flex;
   justify-content: center;
   align-items: center;

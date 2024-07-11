@@ -18,6 +18,7 @@ import CreateCategory from "../popups/CreateCategory";
 import MobileServer from "../popups/MobileServer";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { settogglesidebar } from "@/Redux/sessionSlice";
 
 const Serverbar = () => {
   axios.defaults.withCredentials = true;
@@ -27,7 +28,10 @@ const Serverbar = () => {
   const { createchannelflag } = useSelector((state) => state.counterSlice);
   const { togglesidebar } = useSelector((state) => state.counterSlice);
   const { Directmessagetoggle } = useSelector((state) => state.counterSlice);
+  const { Categoryflag } = useSelector((state) => state.counterSlice);
   const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
+  const [Localsidebar, setLocalsidebar] = useState(true);
+
   const container = useRef();
   const fetchServer = async () => {
     try {
@@ -68,10 +72,25 @@ const Serverbar = () => {
 
     { scope: container.current, dependencies: [togglesidebar] }
   );
+  useEffect(() => {
+    if (currentWidth < 768 && Categoryflag) {
+      setLocalsidebar(false);
+      return;
+    }
+    if (currentWidth < 768 && Categoryflag) {
+      setLocalsidebar(false);
+      return;
+    }
+    if (currentWidth < 768) {
+      setLocalsidebar(true);
+      return;
+    }
+    setLocalsidebar(togglesidebar);
+  }, [currentWidth, togglesidebar, Categoryflag, createchannelflag]);
 
   return (
     <>
-      {togglesidebar && (
+      {Localsidebar && (
         <Cover ref={container}>
           <div>
             <Link to={`/@me`}>
@@ -86,7 +105,7 @@ const Serverbar = () => {
           <ServerlistContainer>
             {data &&
               data.map((value, id) => (
-                <div key={id}>
+                <div onClick={() => dispatch(settogglesidebar(true))} key={id}>
                   <Link to={`/channel/${value._id}`}>
                     <Servers value={value} />
                   </Link>
@@ -120,9 +139,9 @@ const Cover = styled.div`
   min-width: 4.5rem;
   height: 100vh;
   @media (max-width: 768px) {
-    position: absolute;
+    position: sticky;
   }
-  z-index: 100;
+  z-index: 100323123;
   background-color: #1e1f22;
   display: flex;
   align-items: center;

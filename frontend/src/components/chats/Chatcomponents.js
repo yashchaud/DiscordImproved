@@ -65,6 +65,7 @@ const Cover = styled.div`
   padding: 1rem;
   padding-block: 0rem;
   gap: 0.5rem;
+  overflow-x: hidden;
 `;
 
 const Profilepic = styled.div`

@@ -17,6 +17,10 @@ router.post("/join/:serverId", isAuthenticated, serverController.joinServer);
 router.get("/servers", isAuthenticated, serverController.getUserServers);
 router.get("/servers/:serverId", serverController.getServerDetails);
 router.put("/servers/:serverId", serverController.updateServer);
-router.delete("/servers/:serverId", serverController.deleteServer);
+router.delete(
+  "/servers/:serverId",
+  isAuthenticated,
+  serverController.deleteServer
+);
 
 module.exports = router;

@@ -1733,9 +1733,9 @@ dompurify/dist/purify.es.mjs:
   @media (max-width: 768px) {
     padding-bottom: 4rem;
 
-    padding-bottom: calc(
-      env(safe-area-inset-bottom) + 9.5rem
-    ); // Add additional padding on small devices
+    // padding-bottom: calc(
+    //   env(safe-area-inset-bottom) + 9.5rem
+    // ); // Add additional padding on small devices
   }
 `,VN=L.div`
   display: flex;

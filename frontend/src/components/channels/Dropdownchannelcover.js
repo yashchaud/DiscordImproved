@@ -10,11 +10,40 @@ import {
   setCategoryflag,
 } from "@Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { settogglesidebar } from "@/Redux/sessionSlice";
+import { current } from "@reduxjs/toolkit";
 
 const Dropdownchannelcover = () => {
   const dispatch = useDispatch();
+  const { id, channelId, treadId } = useParams();
+  const queryClient = useQueryClient();
   const container = useRef();
   const [isOpen, setIsOpen] = useState(true); // State to track if the dropdown is open
+  const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
+
+  const Deleteserver = async (id) => {
+    try {
+      const response = await axios.delete(`/api/server/servers/${id}`);
+      console.log(response);
+      queryClient.invalidateQueries({ queryKey: ["Serverlist"] });
+    } catch (error) {
+      console.error("Error deleting server:", error);
+    }
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentwidth(window.innerWidth);
+      console.log(currentWidth);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [window.innerWidth, currentWidth]);
 
   useGSAP(
     () => {
@@ -34,6 +63,7 @@ const Dropdownchannelcover = () => {
         onClick={() => {
           dispatch(setDropdownflag(false));
           dispatch(setcreatechannelflag(true));
+          currentWidth > 768 && dispatch(settogglesidebar(false));
         }}
         className="dropdowndiv"
       >
@@ -46,10 +76,21 @@ const Dropdownchannelcover = () => {
         onClick={() => {
           dispatch(setDropdownflag(false));
           dispatch(setCategoryflag(true));
+          currentWidth > 768 && dispatch(settogglesidebar(false));
         }}
         className="dropdowndiv"
       >
         <p>Create Category</p>
+        <div>
+          <img src={plus} alt="" />
+        </div>
+      </div>
+      <div
+        onClick={() => Deleteserver(id)}
+        style={{ cursor: "pointer", color: "red" }}
+        className="dropdowndiv"
+      >
+        <p>Delete Server</p>
         <div>
           <img src={plus} alt="" />
         </div>

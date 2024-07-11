@@ -203,7 +203,7 @@ const serverController = {
           .json({ message: "User is not authorized to delete this server." });
       }
 
-      await server.remove();
+      await Server.deleteOne({ _id: serverId });
 
       res.json({ message: "Server deleted successfully." });
     } catch (error) {

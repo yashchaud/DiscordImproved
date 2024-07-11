@@ -90,8 +90,10 @@ const Cover = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #313338;
+  padding-inline: 1rem;
   position: relative;
-  z-index: 23113;
+  padding-top: 0.8rem;
+  z-index: 2423;
   padding-bottom: env(
     safe-area-inset-bottom
   ); // Use safe area inset if available
