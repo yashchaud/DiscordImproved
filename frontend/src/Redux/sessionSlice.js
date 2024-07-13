@@ -18,6 +18,7 @@ const initialState = {
   userlist: true,
   trigger: false,
   Dropdownflag: false,
+  DirectmessageupdateId: null,
 };
 
 const counterSlice = createSlice({
@@ -90,6 +91,10 @@ const counterSlice = createSlice({
       console.log(action.payload);
       state.Dropdownflag = action.payload;
     },
+    setDirectmessageupdateId(state, action) {
+      console.log(action.payload);
+      state.DirectmessageupdateId = action.payload;
+    },
   },
 });
 
@@ -111,6 +116,7 @@ export const {
   setuserlist,
   setTrigger,
   setDropdownflag,
+  setDirectmessageupdateId,
 } = counterSlice.actions;
 
 const store = configureStore({

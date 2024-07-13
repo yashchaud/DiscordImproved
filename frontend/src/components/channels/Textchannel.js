@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Threads from "../images/Threads.svg";
 import Settings from "../images/Settings.svg";
@@ -6,14 +6,35 @@ import { Draggable } from "react-beautiful-dnd";
 import { NavLink, useParams } from "react-router-dom";
 import voice from "../images/voice.svg";
 import { setconnectSocketvideo } from "@Redux/sessionSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { settogglesidebar } from "@/Redux/sessionSlice";
+import { current } from "@reduxjs/toolkit";
 const Textchannel = ({ channel, index }) => {
+  const dispatch = useDispatch();
   const [Threadpresent, setThreadpresent] = useState(false);
+  const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
   console.log(channel);
   const { id, channelId, threadId } = useParams();
   console.log("ServerID", threadId);
   console.log("ChannelID", channel);
+  const { togglesidebar } = useSelector((state) => state.counterSlice);
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentwidth(window.innerWidth);
+      console.log(currentWidth);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [window.innerWidth, currentWidth]);
+
   return (
     <Linkelem
+      onClick={() => {
+        currentWidth < 768 && dispatch(settogglesidebar(false));
+      }}
       to={`/channel/${id}/${channel._id}`}
       key={channel._id}
       style={{ textDecoration: "none" }}

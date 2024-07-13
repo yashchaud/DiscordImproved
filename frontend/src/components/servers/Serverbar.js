@@ -141,7 +141,7 @@ const Cover = styled.div`
   @media (max-width: 768px) {
     position: sticky;
   }
-  z-index: 100323123;
+  z-index: 4000;
   background-color: #1e1f22;
   display: flex;
   align-items: center;

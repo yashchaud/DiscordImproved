@@ -14,7 +14,7 @@ const Usersection = () => {
   const { userId } = useParams();
   const [realTimeMessages, setRealTimeMessages] = useState([]);
   const messageContainerRef = useRef(null);
-
+  const queryClient = useQueryClient();
   const fetchMessages = async () => {
     try {
       const response = await axios.get(`/api/users/${userId}`);
@@ -43,7 +43,7 @@ const Usersection = () => {
 
     const handleNewMessage = (newMessage) => {
       console.log("New message received: ", newMessage._id);
-      // Add logic here to ensure no duplicates are added
+      queryClient.invalidateQueries({ queryKey: ["directmessages"] });
       setRealTimeMessages((prevMessages) => {
         const alreadyExists = prevMessages.some(
           (msg) => msg._id === newMessage._id
@@ -56,6 +56,7 @@ const Usersection = () => {
     };
 
     socket.on("New-directmessage", handleNewMessage);
+    queryClient.invalidateQueries({ queryKey: ["directmessages"] });
 
     return () => {
       socket.off("New-directmessage", handleNewMessage);

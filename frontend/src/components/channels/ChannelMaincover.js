@@ -110,10 +110,10 @@ const ChannelMaincover = () => {
       setLocalsidebar(false);
       return;
     }
-    if (Currentwidth < 768) {
-      setLocalsidebar(true);
-      return;
-    }
+    // if (Currentwidth < 768) {
+    //   setLocalsidebar(true);
+    //   return;
+    // }
     setLocalsidebar(togglesidebar);
   }, [Currentwidth, togglesidebar, Categoryflag, createchannelflag]);
 

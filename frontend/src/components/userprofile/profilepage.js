@@ -5,6 +5,7 @@ import profile from "../images/nike-just-do-it (2).png";
 import Profilephoto from "./profilephoto";
 import { useSelector, useDispatch } from "react-redux";
 import { setprofilediv } from "@/Redux/sessionSlice";
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 const Profilepage = () => {
   const profilediv = useSelector((state) => state.counterSlice.profilediv);
   const dispatch = useDispatch();
@@ -15,6 +16,13 @@ const Profilepage = () => {
       <Cover onClick={() => dispatch(setprofilediv(false))}>
         <MainContainer onClick={(e) => e.stopPropagation()}>
           <div className="Background">
+            {/* <Avatar>
+              <AvatarImage
+                src="https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png"
+                alt="@shadcn"
+              />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar> */}
             <img
               src="https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png"
               alt=""
@@ -29,16 +37,19 @@ const Profilepage = () => {
           <div className="Firstdiv">
             <div className="Profile">
               <Profilephoto />
-              <div className="Statusdiv">
+              {/* <div className="Statusdiv">
                 <div className="Innnercolor"></div>
-              </div>
+              </div> */}
             </div>
             <div className="buttondiv">
               <div>
                 <button>Send Message</button>
               </div>
               <img
-                onClick={() => dispatch(setprofilediv(false))}
+                onClick={(e) => {
+                  // e.stopPropagation();
+                  dispatch(setprofilediv(false));
+                }}
                 src={dots}
                 alt=""
               />
@@ -96,7 +107,7 @@ const Cover = styled.div`
   align-items: center;
 
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 102222200;
+  z-index: 10222233333333200;
 `;
 const Friendtab = styled.div`
   width: 100%;
@@ -132,8 +143,12 @@ const MainContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   @media (max-width: 768px) {
-    width: 100%;
-    height: 55rem;
+    width: 90%;
+    height: 42rem;
+  }
+  @media (max-height: 768px) {
+    width: 90%;
+    height: 22rem;
   }
   .Background {
     width: 100%;

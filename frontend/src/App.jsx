@@ -90,6 +90,7 @@ const App = () => {
         <Outlet />
         {/* <Test/> */}
       </Cover>
+
       <BottomDiv>
         <Link
           style={{ textDecoration: "none", color: "white" }}

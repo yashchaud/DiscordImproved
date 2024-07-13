@@ -3,7 +3,8 @@ import profile from "../images/nike-just-do-it (2).png";
 import styled from "styled-components";
 import { setprofilediv } from "@Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
+import green from "../images/green.jpg";
 const Profilephoto = () => {
   const dispatch = useDispatch();
 
@@ -22,6 +23,19 @@ const Profilephoto = () => {
       /> */}
         <div>
           <img src={profile} alt="" />
+
+          <Avatar className="w-[30%] h-[30%] rounded-full absolute bottom-0 right-0 border-[2px] border-slate-600 bg-slate-500">
+            <AvatarImage src={green} alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {/* <div className="StatusMain">
+            <div className="Status">
+              <Avatar>
+                <AvatarImage src={green} alt="@shadcn" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </div>
+          </div> */}
         </div>
       </Cover>
     </>
@@ -57,5 +71,30 @@ const Cover = styled.div`
     top: 0;
     transform: scale(1.25);
     object-fit: cover;
+  }
+  .StatusMain {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    transform: scale(1.25);
+    object-fit: cover;
+  }
+  .Status {
+    width: 1.5rem;
+    height: 2.5rem;
+    position: absolute;
+    border-radius: 100%;
+    background-color: #2b2d31;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 100%;
+      object-fit: cover;
+    }
   }
 `;

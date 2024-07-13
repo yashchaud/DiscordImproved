@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../../../Redux/sessionSlice";
+import { setMessage, setDirectmessageupdateId } from "@Redux/sessionSlice";
 
 import { getSocket } from "../../../socket";
 import { useParams } from "react-router-dom";
@@ -21,12 +21,13 @@ const Usersearch = () => {
       content: currentmessage,
       reciever: userId,
     };
-
+    dispatch(setDirectmessageupdateId(userId));
     console.log(messageData);
     const socket = getSocket();
 
     socket.emit("send_message", messageData);
     setCurrentmessage("");
+    queryClient.invalidateQueries({ queryKey: ["directmessages"] });
   };
 
   const handleKeyDown = (event) => {

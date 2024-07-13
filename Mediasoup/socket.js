@@ -12,10 +12,6 @@ const {
   pipeProducersBetweenRouters,
 } = require("./LogicalFunctions/Basicfunctions");
 
-setInterval(() => {
-  // CPU Usage monitoring code...
-}, 1000); // Every second
-
 module.exports = async function (io) {
   const roomQueue = new AwaitQueue();
 
@@ -51,7 +47,36 @@ module.exports = async function (io) {
       },
     },
   ];
+  // setInterval(async () => {
+  //   try {
+  //     // CPU Usage monitoring code...
+  //     for (const [workerIndex, workerData] of workermap.entries()) {
+  //       const { worker } = workerData;
+  //       const usage = await pidusage(worker.pid);
+  //       console.log(
+  //         `Worker ${workerIndex} - PID: ${worker.pid}, CPU: ${
+  //           usage.cpu
+  //         }%, Memory: ${usage.memory / 1024 / 1024} MB`
+  //       );
+  //     }
 
+  //     for (const [transportId, transportData] of transports.entries()) {
+  //       const { transport } = transportData;
+  //       if (transport && !transport.closed) {
+  //         const stats = await transport.getStats();
+  //         stats.forEach((stat) => {
+  //           console.log(
+  //             `Transport ${transportId} - Bandwidth: ${
+  //               stat.bytesSent / 1024 / 1024
+  //             } MB sent, ${stat.bytesReceived / 1024 / 1024} MB received`
+  //           );
+  //         });
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in bandwidth monitoring:", error);
+  //   }
+  // }, 10000); // Every 10 seconds
   async function createWorkers() {
     const numCores = os.cpus().length;
 
@@ -235,7 +260,7 @@ module.exports = async function (io) {
           });
           Trakpiped.set(pipeConsumer, targetRouter);
 
-          alreadyPipedProducer.add(pipeConsumer);
+          alreadyPipedProducer.add(pipeConsumer.id);
         }
         return;
       } else {

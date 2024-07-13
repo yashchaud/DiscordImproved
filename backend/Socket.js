@@ -19,7 +19,7 @@ module.exports = function (io) {
     socket.on("send_message", async (data) => {
       const cookies = cookie.parse(socket.handshake.headers.cookie || "");
       const jwt = cookies.jwt;
-      if (!jwt) return res.status(401).json({ error: "JWT not found" });
+      if (!jwt) return;
 
       const base64Url = jwt.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");

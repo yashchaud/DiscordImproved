@@ -36,6 +36,7 @@ export default defineConfig({
       "@images": path.resolve(__dirname, "src/components/images"),
       "@Redux": path.resolve(__dirname, "src/Redux"),
       "@components": path.resolve(__dirname, "src/components"),
+      "@ui": path.resolve(__dirname, "./@components/ui"),
       "@": path.resolve(__dirname, "./src"),
 
       // Add more aliases as needed
