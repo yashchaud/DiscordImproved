@@ -15,7 +15,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useParams } from "react-router-dom";
 
-const socket = io("http://localhost:3001", { secure: true });
+const socket = io("https://biscord.site/", { secure: true });
 
 const Mainview = () => {
   const isMounted = useRef(false);
