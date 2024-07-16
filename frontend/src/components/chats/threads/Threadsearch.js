@@ -94,16 +94,16 @@ const Cover = styled.div`
   position: relative;
   padding-top: 0.8rem;
   z-index: 2423;
-  padding-bottom: env(
+  /* padding-bottom: env(
     safe-area-inset-bottom
-  ); // Use safe area inset if available
+  ); // Use safe area inset if available */
 
   @media (max-width: 768px) {
-    padding-bottom: 4rem;
+    /* padding-bottom: 4rem; */
 
-    padding-bottom: calc(
+    /* padding-bottom: calc(
       env(safe-area-inset-bottom) + 9.5rem
-    ); // Add additional padding on small devices
+    ); // Add additional padding on small devices */
   }
 `;
 const Continer = styled.div`

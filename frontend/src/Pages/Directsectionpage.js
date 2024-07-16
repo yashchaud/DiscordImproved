@@ -39,22 +39,22 @@ const Cover = styled.div`
     max-width: 100vw;
   }
 `;
-const Spacer = styled.div`
-  @media (max-width: 1024px) {
-    width: 6.5rem;
-  }
-  @media (max-width: 768px) {
-    width: 7.5rem;
-  }
+// const Spacer = styled.div`
+//   @media (max-width: 1024px) {
+//     width: 6.5rem;
+//   }
+//   @media (max-width: 768px) {
+//     width: 7.5rem;
+//   }
 
-  @media (max-width: 520px) {
-    width: 8.5;
-  }
+//   @media (max-width: 520px) {
+//     width: 8.5;
+//   }
 
-  @media (max-width: 425px) {
-    width: 15rem;
-  }
-  @media (max-width: 375px) {
-    width: 25rem;
-  }
-`;
+//   @media (max-width: 425px) {
+//     width: 15rem;
+//   }
+//   @media (max-width: 375px) {
+//     width: 25rem;
+//   }
+// `;

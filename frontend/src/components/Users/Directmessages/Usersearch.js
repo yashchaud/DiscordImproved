@@ -67,14 +67,14 @@ export default Usersearch;
 const Cover = styled.div`
   display: flex;
   height: 7rem;
+  width: 100%;
   align-items: center;
   justify-content: center;
   background-color: #313338;
+  overflow: hidden;
   @media (max-width: 768px) {
-    padding-bottom: 4rem;
-    padding-bottom: calc(
-      env(safe-area-inset-bottom) + 9.5rem
-    ); // Add additional padding on small devices
+    padding-bottom: 2rem;
+    padding-inline: 1rem;
   }
 `;
 const Continer = styled.div`

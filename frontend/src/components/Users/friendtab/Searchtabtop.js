@@ -26,11 +26,5 @@ const Cover = styled.div`
   max-width: 15rem;
   min-width: 15rem;
 
-  @media (max-width: 768px) {
-    position: sticky;
-    left: 5rem;
-    cursor: grab;
-    margin-left: 5rem;
-  }
   background-color: #2b2d31;
 `;

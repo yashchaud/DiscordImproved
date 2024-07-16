@@ -2,10 +2,11 @@ import React from "react";
 import profile from "../images/nike-just-do-it (2).png";
 import styled from "styled-components";
 import { setprofilediv } from "@Redux/sessionSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 import green from "../images/green.jpg";
-const Profilephoto = () => {
+import Invincible from "../images/invincible.svg";
+const Profilephoto = ({ borderColor, borderWidth }) => {
   const dispatch = useDispatch();
 
   return (
@@ -16,26 +17,21 @@ const Profilephoto = () => {
           src="https://cdn.discordapp.com/avatar-decoration-presets/a_629689577fa1da2ef0061a5a8c930de1.png?size=240&passthrough=true"
           alt=""
         />
-        {/* <img
-        className="Style"
-        src="https://cdn.discordapp.com/avatar-decoration-presets/a_0c0eeb351ae2cf48c6e1eee2cae49d40.png?size=240&amp;passthrough=true"
-        alt=""
-      /> */}
         <div>
           <img src={profile} alt="" />
 
-          <Avatar className="w-[30%] h-[30%] rounded-full absolute bottom-0 right-0 border-[2px] border-slate-600 bg-slate-500">
+          <AvatarStyled borderColor={borderColor} borderWidth={borderWidth}>
             <AvatarImage src={green} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {/* <div className="StatusMain">
-            <div className="Status">
-              <Avatar>
-                <AvatarImage src={green} alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </div>
-          </div> */}
+          </AvatarStyled>
+          {/* <AvatarStyled borderColor={borderColor} borderWidth={borderWidth}>
+            <AvatarImage
+              className="w-full h-full"
+              src={Invincible}
+              alt="@shadcn"
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </AvatarStyled> */}
         </div>
       </Cover>
     </>
@@ -97,4 +93,19 @@ const Cover = styled.div`
       object-fit: cover;
     }
   }
+`;
+
+const AvatarStyled = styled(Avatar)`
+  width: 30%;
+  height: 30%;
+  max-width: 2rem;
+  max-height: 2rem;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  border: ${(props) => props.borderWidth || "2px"} solid
+    ${(props) => props.borderColor || "#111214"};
+  background-color: #111214;
 `;

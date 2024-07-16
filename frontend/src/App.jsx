@@ -24,6 +24,7 @@ import discordlogo from "./components/images/Discordlogo.svg";
 import Swipeable from "./components/Helpers/Swipeable";
 import { Toaster, toast } from "sonner";
 import { setDropdownflag } from "@/Redux/sessionSlice";
+import MobilePAge from "./Pages/MobilePAge";
 
 import "./globals.css";
 const App = () => {
@@ -67,7 +68,7 @@ const App = () => {
         <Toaster closeButton richColors position="top-center" />
         <GlobalStyle />
 
-        <Routes>
+        <Routes className="w-full">
           {/* <Route path="/" element={<Homepage />} /> */}
           <Route path="/" element={<Login />} />
           <Route exact path="/channel/" element={<Serverbar />}>
@@ -83,15 +84,17 @@ const App = () => {
           <Route path="/@me" element={<Useronlinepage />}>
             <Route path=":userId" element={<Directsectionpage />} />
           </Route>
-          <Route path="/@mobileme" element={<Messages />} />
+          <Route path="/@mobileme" element={<MobilePAge />} />
           <Route path="/@mobileme/:userId" element={<Usersection />} />
+          {/* <Route path="/@mobileme" element={<Messages />} />
+          <Route path="/@mobileme/:userId" element={<Usersection />} /> */}
         </Routes>
 
         <Outlet />
         {/* <Test/> */}
       </Cover>
 
-      <BottomDiv>
+      {/* <BottomDiv>
         <Link
           style={{ textDecoration: "none", color: "white" }}
           to="/channel"
@@ -110,7 +113,7 @@ const App = () => {
             <p>Messages</p>
           </div>
         </Link>
-      </BottomDiv>
+      </BottomDiv> */}
     </Swipeable>
   );
 };

@@ -4,6 +4,7 @@ import search from "../../components/images/search.svg";
 import Profilephoto from "../../components/userprofile/profilephoto";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ServerBar from "@/components/servers/Serverbar";
 const Messages = () => {
   const [query, setquery] = useState("");
   const [users, setusers] = useState([]);
@@ -22,57 +23,59 @@ const Messages = () => {
     fetchData();
   }, []);
   return (
-    <Cover>
-      <Topdiv>
-        <h1>Messages</h1>
-        <div className="addfriend">
-          <div className="imgdiv">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              alt=""
-            />
+    <div className="flex w-[100%]">
+      <Cover>
+        <Topdiv>
+          <h1>Messages</h1>
+          <div className="addfriend">
+            <div className="imgdiv">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                alt=""
+              />
+            </div>
+            <button>Add Friends</button>
           </div>
-          <button>Add Friends</button>
-        </div>
-      </Topdiv>
-      <Searchdiv>
-        <input
-          onChange={(e) => setquery(e.target.value)}
-          type="text"
-          placeholder="Search"
-        />
-        <img src={search} alt="" />
-      </Searchdiv>
-      <ChatsMaindiv>
-        {users
-          .filter((user) =>
-            user.username.toLowerCase().includes(query.toLowerCase())
-          )
-          .map((user) => (
-            <Link
-              exact
-              style={{ textDecoration: "none" }}
-              to={`/@mobileme/${user._id}`}
-              key={user._id}
-            >
-              <div className="Childcontainer" key={user._id}>
-                <div className="profilediv">
-                  <Profilephoto />
-                </div>
+        </Topdiv>
+        <Searchdiv>
+          <input
+            onChange={(e) => setquery(e.target.value)}
+            type="text"
+            placeholder="Search"
+          />
+          <img src={search} alt="" />
+        </Searchdiv>
+        <ChatsMaindiv>
+          {users
+            .filter((user) =>
+              user.username.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((user) => (
+              <Link
+                exact
+                style={{ textDecoration: "none" }}
+                to={`/@mobileme/${user._id}`}
+                key={user._id}
+              >
+                <div className="Childcontainer" key={user._id}>
+                  <div className="profilediv">
+                    <Profilephoto />
+                  </div>
 
-                <p>{user.username}</p>
-              </div>
-            </Link>
-          ))}
-      </ChatsMaindiv>
-    </Cover>
+                  <p>{user.username}</p>
+                </div>
+              </Link>
+            ))}
+        </ChatsMaindiv>
+      </Cover>
+    </div>
   );
 };
 
 export default Messages;
 
 const Cover = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -102,6 +105,9 @@ const Topdiv = styled.div`
     height: 2rem;
     border-radius: 50%;
     object-fit: cover;
+    @media (max-width: 406px) {
+      display: none;
+    }
   }
   .addfriend {
     display: flex;
@@ -120,6 +126,11 @@ const Topdiv = styled.div`
       padding-inline: 1.2rem;
     }
   }
+  @media (max-width: 406px) {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
 `;
 
 const Searchdiv = styled.div`
@@ -128,6 +139,7 @@ const Searchdiv = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  margin-bottom: 1rem;
   input {
     width: 100%;
     height: 2rem;
@@ -156,6 +168,8 @@ const ChatsMaindiv = styled.div`
   flex-direction: column;
   gap: 0.2rem;
   justify-content: center;
+  overflow-y: scroll;
+  padding: 0.5rem;
   .Childcontainer {
     width: 100%;
     height: 4rem;
@@ -164,6 +178,7 @@ const ChatsMaindiv = styled.div`
     gap: 1rem;
     padding-left: 1rem;
     border-radius: 0.5rem;
+
     background-color: #19191918;
 
     p {

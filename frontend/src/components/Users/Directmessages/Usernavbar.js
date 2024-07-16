@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Threads from "@components/images/Threads.svg";
 import search from "@components/images/search.svg";
 import styled from "styled-components";
@@ -6,57 +6,98 @@ import { setThreads, settogglesidebar } from "@Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rightarrow from "@images/rightarrow.svg";
 import backbutton from "@components/images/leftarrow.svg";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { current } from "@reduxjs/toolkit";
+
 const Usernavbar = () => {
   const [Thread, setThread] = useState(false);
-
+  const [user, setuser] = useState();
+  const { userId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    console.log(currentWidth);
+    const handleResize = () => {
+      setCurrentwidth(window.innerWidth);
+      console.log(currentWidth);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [currentWidth, currentWidth]);
+
   const handleThreadclick = () => {
     setThread(!Thread);
     dispatch(setThreads(!Thread));
   };
+
   const { togglesidebar } = useSelector((state) => state.counterSlice);
+
   const handleSidebar = () => {
+    if (currentWidth < 768) {
+      navigate("/@mobileme");
+      return;
+    }
+
     dispatch(settogglesidebar(true));
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(
+          `/api/users/specificuser/oneuser/${userId}`
+        );
+        setuser(response.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
   return (
-    <>
-      <Cover>
-        <div className="saparator">
-          <Firstdiv>
+    <Cover>
+      <div className="saparator">
+        <Firstdiv>
+          <img
+            onClick={() => handleSidebar()}
+            className="Backbutton"
+            src={backbutton}
+            alt=""
+          />
+          <img className="titlehas" src={Threads} alt="" />
+          <p>{user && user?.username}</p>
+          {/* <img className="hiddenrightarrow" src={rightarrow} alt="" /> */}
+        </Firstdiv>
+        <Secondiv>
+          <p>asdbasbdasbdbsdbasdasdasdasd</p>
+        </Secondiv>
+      </div>
+      <Thirddiv>
+        <div className="Innerdiv">
+          <div className="firstdivnoti">
             <img
-              onClick={() => handleSidebar()}
-              className="Backbutton"
-              src={backbutton}
+              onClick={() => handleThreadclick()}
+              style={{ cursor: "pointer" }}
+              src={Threads}
               alt=""
             />
-            <img className="titlehas" src={Threads} alt="" />
-            <p>general</p>
-            <img className="hiddenrightarrow" src={rightarrow} alt="" />
-          </Firstdiv>
-          <Secondiv>
-            <p>asdbasbdasbdbsdbasdasdasdasd</p>
-          </Secondiv>
-        </div>
-        <Thirddiv>
-          <div className="Innerdiv">
-            <div className="firstdivnoti">
-              <img
-                onClick={() => handleThreadclick()}
-                style={{ cursor: "pointer" }}
-                src={Threads}
-                alt=""
-              />
-            </div>
-            <div className="seconddivnoti">
-              <input type="text" />
-              <img src={search} alt="" />
-            </div>
-            <div className="Thirddivnoti"></div>
           </div>
-        </Thirddiv>
-      </Cover>
-    </>
+          <div className="seconddivnoti">
+            <input type="text" />
+            <img src={search} alt="" />
+          </div>
+          <div className="Thirddivnoti"></div>
+        </div>
+      </Thirddiv>
+    </Cover>
   );
 };
 

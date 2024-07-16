@@ -3,9 +3,10 @@ import dots from "../images/3dots.svg";
 import styled from "styled-components";
 import profile from "../images/nike-just-do-it (2).png";
 import Profilephoto from "./profilephoto";
+
 import { useSelector, useDispatch } from "react-redux";
 import { setprofilediv } from "@/Redux/sessionSlice";
-import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
+
 const Profilepage = () => {
   const profilediv = useSelector((state) => state.counterSlice.profilediv);
   const dispatch = useDispatch();
@@ -16,13 +17,6 @@ const Profilepage = () => {
       <Cover onClick={() => dispatch(setprofilediv(false))}>
         <MainContainer onClick={(e) => e.stopPropagation()}>
           <div className="Background">
-            {/* <Avatar>
-              <AvatarImage
-                src="https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png"
-                alt="@shadcn"
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar> */}
             <img
               src="https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png"
               alt=""
@@ -36,10 +30,7 @@ const Profilepage = () => {
           </div>
           <div className="Firstdiv">
             <div className="Profile">
-              <Profilephoto />
-              {/* <div className="Statusdiv">
-                <div className="Innnercolor"></div>
-              </div> */}
+              <Profilephoto borderWidth="6px" borderColor="#111214" />
             </div>
             <div className="buttondiv">
               <div>
@@ -47,7 +38,6 @@ const Profilepage = () => {
               </div>
               <img
                 onClick={(e) => {
-                  // e.stopPropagation();
                   dispatch(setprofilediv(false));
                 }}
                 src={dots}
@@ -71,13 +61,6 @@ const Profilepage = () => {
               </UserinfoDiv>
               <div className="Seperator"></div>
               <div>
-                {/*<div className="About">
-                <p>ABOUT ME</p>
-                <p>ASDAs</p>
-
-                <p>Discord member since</p>
-                <p>2022-12-10</p>
-        </div> */}
                 <Friendtab>
                   <div className="Buttondiv">
                     <div className="Profile">
@@ -105,10 +88,10 @@ const Cover = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10222233333333200;
 `;
+
 const Friendtab = styled.div`
   width: 100%;
   height: 3.5rem;
@@ -116,6 +99,10 @@ const Friendtab = styled.div`
   align-items: center;
   background-color: #232428;
   border-radius: 0.3rem;
+  cursor: pointer;
+  &:hover {
+    background-color: #313338;
+  }
   p {
     color: #ffffffdb;
   }
@@ -126,6 +113,7 @@ const Friendtab = styled.div`
     display: flex;
   }
   .Buttondiv {
+    width: 100%;
     position: relative;
     margin-left: 0.5rem;
     gap: 0.8rem;
@@ -134,10 +122,11 @@ const Friendtab = styled.div`
     z-index: 23333334;
   }
 `;
+
 const MainContainer = styled.div`
   width: 38rem;
   height: 38rem;
-  background-color: rgb(43, 45, 49);
+  background-color: #111214;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -255,7 +244,7 @@ const MainContainer = styled.div`
     .Name {
       width: 100%;
       height: 100%;
-      background-color: #131316;
+      background-color: #222427;
       border-radius: 0.5rem;
       padding: 1rem;
       display: flex;

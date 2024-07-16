@@ -93,11 +93,20 @@ const Serverbar = () => {
       {Localsidebar && (
         <Cover ref={container}>
           <div>
-            <Link to={`/@me`}>
-              <Logodiv>
-                <img src={discordlogo} alt="" />
-              </Logodiv>
-            </Link>
+            {currentWidth < 769 && (
+              <Link to={`/@mobileme`}>
+                <Logodiv>
+                  <img src={discordlogo} alt="" />
+                </Logodiv>
+              </Link>
+            )}
+            {currentWidth > 769 && (
+              <Link to={`/@me`}>
+                <Logodiv>
+                  <img src={discordlogo} alt="" />
+                </Logodiv>
+              </Link>
+            )}
           </div>
           <div>
             <Linedivider></Linedivider>
@@ -170,9 +179,9 @@ const Logodiv = styled.div`
   display: flex;
   justify-content: center;
   background-color: #313338;
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     display: none;
-  }
+  } */
   img {
     width: 63%;
   }
