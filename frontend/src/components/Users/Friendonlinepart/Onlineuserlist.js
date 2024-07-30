@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import messageimg from "@images/messagefriendsection.svg";
 import settings from "@images/3dots.svg";
+import Search from "../../images/search.svg";
 import solo from "@images/solo.jfif";
 import styled from "styled-components";
 import axios from "axios";
@@ -33,7 +34,7 @@ const Onlineuserlist = () => {
             type="text"
             placeholder="Search"
           />
-          <img src={settings} alt="" />
+          <img src={Search} alt="" />
         </Searchbar>
       </div>
       <Textonline>

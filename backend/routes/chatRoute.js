@@ -24,6 +24,7 @@ router.put(
   hasPermission("MANAGE_CHANNEL"),
   chatController.updateMessage
 );
+router.get("/search/search", chatController.SearchChats);
 
 // Delete a message, requires message ownership or manage permission
 // router.delete(

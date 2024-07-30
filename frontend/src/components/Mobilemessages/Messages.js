@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import search from "../../components/images/search.svg";
 import Profilephoto from "../../components/userprofile/profilephoto";
+import Back from "../../components/images/leftarrow.svg";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ServerBar from "@/components/servers/Serverbar";
+import { ScrollArea } from "@ui/scroll-area";
+import { useSelector, useDispatch } from "react-redux";
+import { setMessageFlag } from "@/Redux/sessionSlice";
+
 const Messages = () => {
   const [query, setquery] = useState("");
   const [users, setusers] = useState([]);
-
+  const dispatch = useDispatch();
+  const { MessageFlag } = useSelector((state) => state.counterSlice);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,48 +31,53 @@ const Messages = () => {
   return (
     <div className="flex w-[100%]">
       <Cover>
-        <Topdiv>
-          <h1>Messages</h1>
-          <div className="addfriend">
-            <div className="imgdiv">
+        <ScrollArea className="w-full h-full">
+          <Topdiv className="p-2">
+            <div className="flex justify-between object-center gap-6">
               <img
-                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                className="cursor-pointer block"
+                onClick={() => dispatch(setMessageFlag(true))}
+                src={Back}
                 alt=""
               />
+              <h1>Messages</h1>
             </div>
-            <button>Add Friends</button>
-          </div>
-        </Topdiv>
-        <Searchdiv>
-          <input
-            onChange={(e) => setquery(e.target.value)}
-            type="text"
-            placeholder="Search"
-          />
-          <img src={search} alt="" />
-        </Searchdiv>
-        <ChatsMaindiv>
-          {users
-            .filter((user) =>
-              user.username.toLowerCase().includes(query.toLowerCase())
-            )
-            .map((user) => (
-              <Link
-                exact
-                style={{ textDecoration: "none" }}
-                to={`/@mobileme/${user._id}`}
-                key={user._id}
-              >
-                <div className="Childcontainer" key={user._id}>
-                  <div className="profilediv">
-                    <Profilephoto />
-                  </div>
+            <div className="addfriend">
+              <div className="imgdiv"></div>
+              <button>Add Friends</button>
+            </div>
+          </Topdiv>
+          <Searchdiv className="mt-6">
+            <input
+              onChange={(e) => setquery(e.target.value)}
+              type="text"
+              placeholder="Search"
+            />
+            <img src={search} alt="" />
+          </Searchdiv>
+          <ChatsMaindiv>
+            {users
+              .filter((user) =>
+                user.username.toLowerCase().includes(query.toLowerCase())
+              )
+              .map((user) => (
+                <Link
+                  exact
+                  style={{ textDecoration: "none" }}
+                  to={`/@mobileme/${user._id}`}
+                  key={user._id}
+                >
+                  <div className="Childcontainer " key={user._id}>
+                    <div className="profilediv">
+                      <Profilephoto />
+                    </div>
 
-                  <p>{user.username}</p>
-                </div>
-              </Link>
-            ))}
-        </ChatsMaindiv>
+                    <p>{user.username}</p>
+                  </div>
+                </Link>
+              ))}
+          </ChatsMaindiv>
+        </ScrollArea>
       </Cover>
     </div>
   );
@@ -105,9 +116,6 @@ const Topdiv = styled.div`
     height: 2rem;
     border-radius: 50%;
     object-fit: cover;
-    @media (max-width: 406px) {
-      display: none;
-    }
   }
   .addfriend {
     display: flex;
@@ -168,7 +176,6 @@ const ChatsMaindiv = styled.div`
   flex-direction: column;
   gap: 0.2rem;
   justify-content: center;
-  overflow-y: scroll;
   padding: 0.5rem;
   .Childcontainer {
     width: 100%;

@@ -213,7 +213,7 @@ const Cover = styled.div`
   background-color: #1e1f22;
   position: absolute;
   top: 0;
-  z-index: 100000000;
+  z-index: 1000000222222222200;
   display: flex;
   align-items: center;
   flex-direction: column;

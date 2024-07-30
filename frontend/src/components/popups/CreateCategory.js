@@ -94,7 +94,7 @@ const Cover = styled.div`
   background-color: #0e0f10ad;
   position: absolute;
   top: 0;
-  z-index: 100000000;
+  z-index: 22222222222222222222;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,8 +110,8 @@ const Maincontainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   @media (max-width: 770px) {
-    width: 90%;
-    height: 25rem;
+    width: 100%;
+    height: 100%;
   }
   .cross {
     position: absolute;

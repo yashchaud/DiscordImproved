@@ -49,8 +49,8 @@ const Dropdownchannelcover = () => {
     () => {
       const animation = gsap.fromTo(
         container.current,
-        { scale: 0.5 },
-        { scale: 1, ease: "back.out(1.7)", duration: 0.5 }
+        { scale: 0.5, translateY: 0 },
+        { scale: 1, ease: "back.out(1.7)", duration: 0.5, translateY: 30 }
       );
     },
 
@@ -63,7 +63,7 @@ const Dropdownchannelcover = () => {
         onClick={() => {
           dispatch(setDropdownflag(false));
           dispatch(setcreatechannelflag(true));
-          currentWidth > 768 && dispatch(settogglesidebar(false));
+          currentWidth < 768 && dispatch(settogglesidebar(false));
         }}
         className="dropdowndiv"
       >
@@ -76,7 +76,7 @@ const Dropdownchannelcover = () => {
         onClick={() => {
           dispatch(setDropdownflag(false));
           dispatch(setCategoryflag(true));
-          currentWidth > 768 && dispatch(settogglesidebar(false));
+          currentWidth < 768 && dispatch(settogglesidebar(false));
         }}
         className="dropdowndiv"
       >

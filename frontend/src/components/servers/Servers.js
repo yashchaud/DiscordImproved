@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 const Servers = ({ value }) => {
   console.log(value.Serverpic);
+
   return (
     <>
       <Link to={`/channel/${value._id}`}>

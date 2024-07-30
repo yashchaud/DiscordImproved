@@ -290,9 +290,9 @@ const Cover = styled.div`
   background-color: #0e0f10ad;
   position: absolute;
   top: 0;
-  z-index: 100002222222222222220000;
   display: flex;
   justify-content: center;
+  z-index: 100002222222222222220000;
   align-items: center;
   .Activa {
     background-color: #555555ac;
@@ -306,6 +306,8 @@ const MainContinaer = styled.div`
   width: 30rem;
   height: 30rem;
   border-radius: 0.5rem;
+  z-index: 100002222222222222220000;
+
   position: relative;
   .Paddindiv {
     padding: 1rem;

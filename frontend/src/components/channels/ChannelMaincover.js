@@ -15,12 +15,14 @@ import Dropdownchannelcover from "./Dropdownchannelcover";
 import Statusdivbottom from "./Statusdivbottom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useLocation } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 
 const ChannelMaincover = () => {
   const [categories, setCategories] = useState();
   const [Currentwidth, setCurrentwidth] = useState(window.innerWidth);
-
+  const [CurrentServer, setCurrentServer] = useState();
+  const location = useLocation();
   const { id } = useParams();
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -46,6 +48,13 @@ const ChannelMaincover = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [window.innerWidth, Currentwidth]);
+
+  useEffect(() => {
+    const response = axios.get(`/api/server/servers/${id}`).then((response) => {
+      console.log("Server", response.data);
+      setCurrentServer(response.data);
+    });
+  }, [location.pathname]);
 
   const fetchMessages = async () => {
     try {
@@ -133,7 +142,7 @@ const ChannelMaincover = () => {
               }}
             >
               <div>
-                <h4>Yash's server</h4>
+                <h4>{CurrentServer?.serverName}</h4>
               </div>
               <div className="drop">
                 <img onClick={() => setisopen(!isopen)} src={dropdown} alt="" />

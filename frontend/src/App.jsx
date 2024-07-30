@@ -16,7 +16,11 @@ import Createchannels from "@components/popups/Createchannel";
 import Directsectionpage from "@Pages/Directsectionpage";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { setDirectmessage, settogglesidebar } from "@/Redux/sessionSlice";
+import {
+  setDirectmessage,
+  settogglesidebar,
+  setMessageFlag,
+} from "@/Redux/sessionSlice";
 import Messages from "@components/Mobilemessages/Messages";
 import Usersection from "./Pages/Usersectionpage";
 import messagea from "./components/images/messageas.svg";
@@ -27,11 +31,27 @@ import { setDropdownflag } from "@/Redux/sessionSlice";
 import MobilePAge from "./Pages/MobilePAge";
 
 import "./globals.css";
+import { current } from "@reduxjs/toolkit";
 const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  3;
+  const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
+
   console.log(location.pathname);
   const path = location.pathname;
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCurrentwidth(window.innerWidth);
+      console.log(currentWidth);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [window.innerWidth, currentWidth]);
 
   if (path.startsWith("/@me/") && path.split("/").length === 3) {
     dispatch(setDirectmessage(true));
@@ -57,6 +77,11 @@ const App = () => {
   const right = () => {
     dispatch(settogglesidebar(true));
   };
+  useEffect(() => {
+    if (currentWidth > 768) {
+      dispatch(settogglesidebar(true));
+    }
+  }, [settogglesidebar, currentWidth]);
 
   return (
     <Swipeable

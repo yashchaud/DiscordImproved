@@ -18,7 +18,8 @@ import CreateCategory from "../popups/CreateCategory";
 import MobileServer from "../popups/MobileServer";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { settogglesidebar } from "@/Redux/sessionSlice";
+import { settogglesidebar, setMessageFlag } from "@/Redux/sessionSlice";
+import { useLocation } from "react-router-dom";
 
 const Serverbar = () => {
   axios.defaults.withCredentials = true;
@@ -28,9 +29,13 @@ const Serverbar = () => {
   const { createchannelflag } = useSelector((state) => state.counterSlice);
   const { togglesidebar } = useSelector((state) => state.counterSlice);
   const { Directmessagetoggle } = useSelector((state) => state.counterSlice);
+  const { MessageFlag } = useSelector((state) => state.counterSlice);
   const { Categoryflag } = useSelector((state) => state.counterSlice);
   const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
   const [Localsidebar, setLocalsidebar] = useState(true);
+  const Serverlogocontainer = useRef();
+  const [selectedServer, setSelectedServer] = useState(null); // State for selected server
+  const location = useLocation();
 
   const container = useRef();
   const fetchServer = async () => {
@@ -61,32 +66,57 @@ const Serverbar = () => {
   useEffect(() => {
     setCurrentwidth(window.innerWidth);
   }, [currentWidth, window.innerWidth]);
-  useGSAP(
-    () => {
-      const animation = gsap.fromTo(
-        container.current,
-        { translateX: 0 },
-        { translateX: 4.5, ease: "back.out(1.7)", duration: 1 }
-      );
-    },
 
-    { scope: container.current, dependencies: [togglesidebar] }
-  );
   useEffect(() => {
-    if (currentWidth < 768 && Categoryflag) {
+    if (currentWidth < 768 && !togglesidebar) {
       setLocalsidebar(false);
       return;
     }
-    if (currentWidth < 768 && Categoryflag) {
-      setLocalsidebar(false);
-      return;
-    }
-    if (currentWidth < 768) {
+    if (currentWidth < 768 && MessageFlag) {
       setLocalsidebar(true);
       return;
     }
+    if (currentWidth < 768 && MessageFlag === false) {
+      setLocalsidebar(false);
+      return;
+    }
+
+    if (currentWidth < 768 && createchannelflag) {
+      setLocalsidebar(false);
+      return;
+    }
+    if (currentWidth < 768 && Categoryflag) {
+      setLocalsidebar(false);
+      return;
+    }
+
     setLocalsidebar(togglesidebar);
-  }, [currentWidth, togglesidebar, Categoryflag, createchannelflag]);
+  }, [
+    currentWidth,
+    togglesidebar,
+    Categoryflag,
+    createchannelflag,
+    MessageFlag,
+  ]);
+
+  useGSAP(
+    () => {
+      if (location.pathname === "/@me") {
+        gsap.fromTo(
+          Serverlogocontainer.current,
+          { scale: 0.5, borderRadius: "2rem" },
+          {
+            scale: 1,
+            borderRadius: "1rem",
+            backgroundColor: "#5865f2",
+            ease: "back.out(1.7)",
+            duration: 0.5,
+          }
+        );
+      }
+    },
+    { scope: container, dependencies: [location.pathname] }
+  );
 
   return (
     <>
@@ -95,14 +125,14 @@ const Serverbar = () => {
           <div>
             {currentWidth < 769 && (
               <Link to={`/@mobileme`}>
-                <Logodiv>
+                <Logodiv onClick={() => dispatch(setMessageFlag(false))}>
                   <img src={discordlogo} alt="" />
                 </Logodiv>
               </Link>
             )}
             {currentWidth > 769 && (
               <Link to={`/@me`}>
-                <Logodiv>
+                <Logodiv ref={Serverlogocontainer}>
                   <img src={discordlogo} alt="" />
                 </Logodiv>
               </Link>
@@ -114,12 +144,19 @@ const Serverbar = () => {
           <ServerlistContainer>
             {data &&
               data.map((value, id) => (
-                <div onClick={() => dispatch(settogglesidebar(true))} key={id}>
+                <div
+                  onClick={() => {
+                    dispatch(settogglesidebar(true));
+                    setSelectedServer(value._id); // Update selected server
+                  }}
+                  key={id}
+                >
                   <Link to={`/channel/${value._id}`}>
-                    <Servers value={value} />
+                    <Servers
+                      value={value}
+                      isSelected={selectedServer === value._id}
+                    />
                   </Link>
-
-                  {/* <Servers /> */}
                 </div>
               ))}
           </ServerlistContainer>
@@ -179,9 +216,6 @@ const Logodiv = styled.div`
   display: flex;
   justify-content: center;
   background-color: #313338;
-  /* @media (max-width: 768px) {
-    display: none;
-  } */
   img {
     width: 63%;
   }

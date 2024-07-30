@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Mainview from "@/components/Videocalling/Mainview";
+import MembersTab from "@/components/chats/MembersTab";
 import Swipeable from "../components/Helpers/Swipeable";
 const Chatpage = () => {
   const { createThread } = useSelector((state) => state.counterSlice);
@@ -37,9 +38,13 @@ const Chatpage = () => {
       {channeltype === "text" && (
         <Cover>
           <Chatnavbar />
-
-          <Chatsection />
-          <Searcharea />
+          <div className="flex  w-full max-h-[95%] relative">
+            <div className=" flex flex-col w-full overflow-hidden mr-[0.5px]">
+              <Chatsection />
+              <Searcharea />
+            </div>
+            {/* <MembersTab /> */}
+          </div>
         </Cover>
       )}
 

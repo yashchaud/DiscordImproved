@@ -81,7 +81,7 @@ const Profilepage = () => {
 export default Profilepage;
 
 const Cover = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100vw;
   height: 100vh;
@@ -137,12 +137,12 @@ const MainContainer = styled.div`
   }
   @media (max-height: 768px) {
     width: 90%;
-    height: 22rem;
+    height: 35rem;
   }
   .Background {
     width: 100%;
     height: 10rem;
-    background-color: #5d80c6;
+    background-color: #d1d3d6;
     position: relative;
     border-radius: 0.5rem 0.5rem 0 0;
 

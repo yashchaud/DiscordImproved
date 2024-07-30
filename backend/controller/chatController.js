@@ -1,3 +1,9 @@
+const mongoose = require("mongoose");
+
+const {
+  Types: { ObjectId },
+} = mongoose;
+
 const Chat = require("../Schema/chatSchema");
 const Channel = require("../Schema/channelSchema");
 const User = require("../Schema/userSchema");
@@ -47,6 +53,28 @@ const chatController = {
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  },
+  SearchChats: async (req, res, next) => {
+    const { text, sender, channel } = req.query;
+
+    try {
+      let searchCriteria = {
+        content: { $regex: text, $options: "i" }, // Use regex for partial matches
+      };
+
+      if (channel && ObjectId.isValid(channel)) {
+        searchCriteria.channel = ObjectId(channel);
+      }
+
+      if (sender && ObjectId.isValid(sender)) {
+        searchCriteria.user = ObjectId(sender);
+      }
+
+      const chats = await Chat.find(searchCriteria);
+      res.json(chats);
+    } catch (error) {
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
   getChannelMessages: async (req, res, next) => {

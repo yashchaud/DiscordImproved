@@ -36,6 +36,7 @@ const channelController = {
       res.status(500).json({ error: error.message });
     }
   },
+
   getChannel: async (req, res, next) => {
     try {
       const channelId = req.params.channelId;

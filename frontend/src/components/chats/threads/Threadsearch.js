@@ -94,6 +94,7 @@ const Cover = styled.div`
   position: relative;
   padding-top: 0.8rem;
   z-index: 2423;
+  overflow: hidden;
   /* padding-bottom: env(
     safe-area-inset-bottom
   ); // Use safe area inset if available */

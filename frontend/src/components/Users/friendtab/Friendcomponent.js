@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setTrigger } from "@/Redux/sessionSlice";
 import { useQueryClient } from "@tanstack/react-query";
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 
 const Friendcomponent = ({ user }) => {
   const dispatch = useDispatch();
@@ -31,10 +32,13 @@ const Friendcomponent = ({ user }) => {
   return (
     <Cover>
       <div className="Profile">
-        <img
-          src="https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/bucket-88dwgz/Profilepicidsc.jpg"
-          alt=""
-        />
+        <Avatar>
+          <AvatarImage
+            src="https://bucket-88dwgz.s3.ap-south-1.amazonaws.com/bucket-88dwgz/Profilepicidsc.jpg"
+            alt=""
+          />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
         <p>{user?.users[0]?.username}</p>
       </div>
       <div className="Buttondiv">
@@ -57,16 +61,26 @@ const Cover = styled.div`
   .Profile {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin-left: 0.5rem;
+
     gap: 0.5rem;
     img {
-      width: 2rem;
-      height: 2rem;
+      max-width: 2rem;
+      max-height: 2rem;
       border-radius: 100%;
       object-fit: cover;
     }
+    p {
+      max-width: 3rem;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .Buttondiv {
+    min-width: 2rem;
     margin-right: 0.5rem;
     display: flex;
     align-items: center;

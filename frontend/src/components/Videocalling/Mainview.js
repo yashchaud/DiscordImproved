@@ -14,10 +14,14 @@ import webcamona from "@images/webcamona.svg";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useParams } from "react-router-dom";
+import Leftarrow from "@images/leftarrow.svg";
+import { useSelector, useDispatch } from "react-redux";
+import { settogglesidebar } from "@/Redux/sessionSlice";
 
 const socket = io("https://biscord.site/", { secure: true });
 
 const Mainview = () => {
+  const dispatch = useDispatch();
   const isMounted = useRef(false);
   const [rtpCapabilities, SetrtpCapabilities] = useState();
   const [audioProducerCreated, setAudioProducerCreated] = useState(false);
@@ -678,8 +682,13 @@ const Mainview = () => {
     <>
       {!Disconnected ? (
         <Cover ref={container}>
-          <Nav>
-            <h1>General</h1>
+          <Nav className="ml-2 flex item-center justify-center gap-4">
+            <img
+              onClick={() => dispatch(settogglesidebar(true))}
+              src={Leftarrow}
+              alt=""
+            />
+            <h1 className="mb-4 ">General</h1>
           </Nav>
           <MainDiv>
             <div className="parent">
