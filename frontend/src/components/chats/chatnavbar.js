@@ -12,11 +12,15 @@ import { setThreads, settogglesidebar } from "../../Redux/sessionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rightarrow from "@images/rightarrow.svg";
 import backbutton from "../images/leftarrow.svg";
-const chatnavbar = () => {
+import { Input } from "@ui/input";
+import { Popover, PopoverTrigger, PopoverContent } from "@ui/popover";
+import PopoverInput from "./PopoverInput";
+
+const ChatNavbar = () => {
   const [Thread, setThread] = useState(false);
 
   const dispatch = useDispatch();
-  const handleThreadclick = () => {
+  const handleThreadClick = () => {
     setThread(!Thread);
     dispatch(setThreads(!Thread));
   };
@@ -28,45 +32,44 @@ const chatnavbar = () => {
   return (
     <>
       <Cover>
-        <div className="saparator">
-          <Firstdiv>
+        <div className="separator">
+          <FirstDiv>
             <img
               onClick={() => handleSidebar()}
-              className="Backbutton"
+              className="backButton"
               src={backbutton}
               alt=""
             />
-            <img className="titlehas" src={Threads} alt="" />
+            <img className="titleHas" src={Threads} alt="" />
             <p>general</p>
-            <img className="hiddenrightarrow" src={rightarrow} alt="" />
-          </Firstdiv>
-          <Secondiv>
+            <img className="hiddenRightArrow" src={rightarrow} alt="" />
+          </FirstDiv>
+          <SecondDiv>
             <p>asdbasbdasbdbsdbasdasdasdasd</p>
-          </Secondiv>
+          </SecondDiv>
         </div>
-        <Thirddiv>
-          <div className="Innerdiv">
-            <div className="firstdivnoti">
+        <ThirdDiv>
+          <div className="innerDiv">
+            <div className="firstDivNoti">
               <img
-                onClick={() => handleThreadclick()}
+                onClick={() => handleThreadClick()}
                 style={{ cursor: "pointer" }}
                 src={Threads}
                 alt=""
               />
             </div>
-            <div className="seconddivnoti">
-              <input type="text" />
-              <img src={search} alt="" />
+            <div className="secondDivNoti relative">
+              <PopoverInput />
             </div>
-            <div className="Thirddivnoti"></div>
+            <div className="thirdDivNoti"></div>
           </div>
-        </Thirddiv>
+        </ThirdDiv>
       </Cover>
     </>
   );
 };
 
-export default chatnavbar;
+export default ChatNavbar;
 
 const Cover = styled.div`
   width: 100%;
@@ -76,23 +79,23 @@ const Cover = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #1e1f22;
-  .saparator {
+  .separator {
     display: flex;
     align-items: center;
     gap: 1rem;
     position: relative;
   }
 `;
-const Firstdiv = styled.div`
+
+const FirstDiv = styled.div`
   width: 7rem;
   height: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   color: white;
-
   border-right: 1px solid #3f4147;
-  .Backbutton {
+  .backButton {
     width: 1rem;
     margin-left: 0.8rem;
     cursor: pointer;
@@ -102,14 +105,14 @@ const Firstdiv = styled.div`
     }
   }
   @media (max-width: 1024px) {
-    gap: 0.3;
+    gap: 0.3rem;
     border: none;
   }
-  .titlehas {
+  .titleHas {
     width: 1.5rem;
     margin-left: 0.5rem;
   }
-  .hiddenrightarrow {
+  .hiddenRightArrow {
     width: 0.6rem;
     display: none;
     @media (max-width: 1024px) {
@@ -121,7 +124,8 @@ const Firstdiv = styled.div`
     margin-left: 0.2rem;
   }
 `;
-const Secondiv = styled.div`
+
+const SecondDiv = styled.div`
   display: flex;
   max-width: 60%;
   color: white;
@@ -133,47 +137,43 @@ const Secondiv = styled.div`
     display: none;
   }
 `;
-const Thirddiv = styled.div`
+
+const ThirdDiv = styled.div`
   display: flex;
   width: 24rem;
   margin-right: 0.5rem;
   padding-left: 1rem;
   align-items: center;
   position: relative;
+  transition: width 0.3s ease-in-out;
+  transform: translateX(-3rem);
   z-index: 1;
   background-color: #313338;
   @media (max-width: 1024px) {
     display: none;
   }
-  .Innerdiv {
+  .innerDiv {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 
-    .firstdivnoti {
+    .firstDivNoti {
       display: flex;
       gap: 1rem;
       margin-right: 0.3rem;
     }
-    .seconddivnoti {
+    .secondDivNoti {
       display: flex;
-      width: 10.5rem;
-      height: 1.5rem;
+      width: 12.5rem;
+      height: 1.6rem;
       justify-content: space-around;
-      background-color: #1e1f22;
       border-radius: 0.2rem;
-      input {
-        width: 7rem;
-        outline: none;
-        border: none;
-        background-color: transparent;
-        color: white;
-      }
+
       img {
         width: 1.2rem;
       }
     }
-    .Thirddivnoti {
+    .thirdDivNoti {
       display: flex;
       gap: 0.7rem;
     }

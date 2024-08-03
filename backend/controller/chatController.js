@@ -64,17 +64,17 @@ const chatController = {
       };
 
       if (channel && ObjectId.isValid(channel)) {
-        searchCriteria.channel = ObjectId(channel);
+        searchCriteria.channel = channel;
       }
 
       if (sender && ObjectId.isValid(sender)) {
-        searchCriteria.user = ObjectId(sender);
+        searchCriteria.user = sender;
       }
 
       const chats = await Chat.find(searchCriteria);
       res.json(chats);
     } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: error.message });
     }
   },
   getChannelMessages: async (req, res, next) => {

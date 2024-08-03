@@ -20,6 +20,8 @@ const initialState = {
   Dropdownflag: false,
   DirectmessageupdateId: null,
   MessageFlag: false,
+  filters: [],
+  textFilter: "",
 };
 
 const counterSlice = createSlice({
@@ -100,6 +102,14 @@ const counterSlice = createSlice({
       console.log(action.payload);
       state.MessageFlag = action.payload;
     },
+    setFilters(state, action) {
+      state.filters = action.payload;
+      console.log(state.filters);
+    },
+    setTextFilter(state, action) {
+      state.filters = action.payload;
+      console.log(state.filters);
+    },
   },
 });
 
@@ -123,6 +133,8 @@ export const {
   setDropdownflag,
   setDirectmessageupdateId,
   setMessageFlag,
+  setFilters,
+  setTextFilter,
 } = counterSlice.actions;
 
 const store = configureStore({
