@@ -49,7 +49,6 @@ const channelController = {
             channel.category &&
             channel.category.toString() === category._id.toString()
         );
-        console.log(filteredChannels);
         return { ...category, channels: filteredChannels };
       });
 

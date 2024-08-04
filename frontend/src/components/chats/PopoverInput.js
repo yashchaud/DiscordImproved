@@ -5,12 +5,9 @@ import { Input } from "@ui/input";
 import { PopoverAnchor } from "@radix-ui/react-popover";
 import styled from "styled-components";
 import { setFilters, setTextFilter } from "@/Redux/sessionSlice"; // Import the action
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const users = [
-  { id: "1", name: "Alice" },
-  { id: "2", name: "Bob" },
-  { id: "3", name: "Charlie" },
-];
 const channels = [
   { id: "1", name: "General" },
   { id: "2", name: "Random" },
@@ -54,7 +51,9 @@ const reducer = (state, action) => {
   }
 };
 
-const PopoverInput = () => {
+const PopoverInput = ({ users }) => {
+  console.log(users); // Check if users prop is being received correctly
+  const { id, channelId, threadId } = useParams();
   const [state, dispatchLocal] = useReducer(reducer, initialState);
   const inputRef = useRef(null);
   const popoverRef = useRef(null);
@@ -129,22 +128,27 @@ const PopoverInput = () => {
     inputRef.current.focus();
   };
 
-  const fetchSearchResults = (criteria) => {
-    const results = chats.filter(
-      (chat) =>
-        (!criteria.sender || chat.userId === criteria.sender) &&
-        (!criteria.channel || chat.channelId === criteria.channel) &&
-        chat.message.toLowerCase().includes(state.inputValue.toLowerCase())
-    );
-    dispatchLocal({ type: "SET_SEARCH_RESULTS", payload: results });
+  const fetchSearchResults = async (criteria) => {
+    try {
+      const response = await axios.get("/search", {
+        params: {
+          text: state.inputValue,
+          sender: criteria.sender,
+          channel: criteria.channel,
+        },
+      });
+      dispatchLocal({ type: "SET_SEARCH_RESULTS", payload: response.data });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   const filteredOptions =
     state.selectedFilter === "from:user"
       ? users.filter(
           (user) =>
-            !state.filters.some((filter) => filter.value?.id === user.id) &&
-            user.name.toLowerCase().includes(state.inputValue.toLowerCase())
+            !state.filters.some((filter) => filter.value?.id === user._id) &&
+            user.username.toLowerCase().includes(state.inputValue.toLowerCase())
         )
       : channels.filter(
           (channel) =>
@@ -156,13 +160,27 @@ const PopoverInput = () => {
     const criteria = {};
     filters.forEach((filter) => {
       if (filter.type === "from:user") {
-        criteria.sender = filter.value.id;
+        criteria.sender = filter.value._id;
       } else if (filter.type === "from:channel") {
         criteria.channel = filter.value.id;
       }
     });
     return criteria;
   };
+
+  useEffect(() => {
+    console.log("filter", state.filters);
+    console.log("SearchFilter", state.selectedFilter);
+    console.log(state.inputValue);
+    console.log(state.isPopoverOpen);
+    console.log("searchResults", state.searchResults);
+  }, [
+    state.filters,
+    state.selectedFilter,
+    state.inputValue,
+    state.isPopoverOpen,
+    state.searchResults,
+  ]);
 
   return (
     <div>
@@ -178,7 +196,7 @@ const PopoverInput = () => {
               {state.filters.map((filter, index) => (
                 <Filter key={index}>
                   {filter.type.replace("from:", "")}:{" "}
-                  {filter.value ? filter.value.name : ""}
+                  {filter.value ? filter.value.username : ""}
                 </Filter>
               ))}
             </StyledFilters>
@@ -207,7 +225,7 @@ const PopoverInput = () => {
                 <div className="flex flex-col gap-1">
                   <div>
                     <div className="flex flex-col justify-start items-start gap-1 text-[#b5bac1]">
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center pr-2 pl-2">
                         <p className="text-sm text-[#b5bac1]">SEARCH OPTIONS</p>
                       </div>
                       {!state.selectedFilter && (
@@ -240,12 +258,12 @@ const PopoverInput = () => {
                     filteredOptions.map((option) => (
                       <Option
                         className="flex items-center gap-2 cursor-pointer hover:bg-[#313338] hover:text-white rounded-md"
-                        key={option.id}
+                        key={option._id}
                         onClick={() => {
                           handleOptionClick(option);
                         }}
                       >
-                        {option.name}
+                        {option.username}
                       </Option>
                     ))}
                 </OptionsList>

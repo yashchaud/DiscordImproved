@@ -13,15 +13,11 @@ const Textchannel = ({ channel, index }) => {
   const dispatch = useDispatch();
   const [Threadpresent, setThreadpresent] = useState(false);
   const [currentWidth, setCurrentwidth] = useState(window.innerWidth);
-  console.log(channel);
   const { id, channelId, threadId } = useParams();
-  console.log("ServerID", threadId);
-  console.log("ChannelID", channel);
   const { togglesidebar } = useSelector((state) => state.counterSlice);
   useEffect(() => {
     const handleResize = () => {
       setCurrentwidth(window.innerWidth);
-      console.log(currentWidth);
     };
     window.addEventListener("resize", handleResize);
 

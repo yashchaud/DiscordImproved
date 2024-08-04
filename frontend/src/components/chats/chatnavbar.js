@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Threads from "../images/Threads.svg";
 import bell from "../images/bell.svg";
 import search from "../images/search.svg";
@@ -15,9 +15,12 @@ import backbutton from "../images/leftarrow.svg";
 import { Input } from "@ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@ui/popover";
 import PopoverInput from "./PopoverInput";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ChatNavbar = () => {
   const [Thread, setThread] = useState(false);
+  const [User, setUser] = useState();
 
   const dispatch = useDispatch();
   const handleThreadClick = () => {
@@ -28,6 +31,12 @@ const ChatNavbar = () => {
   const handleSidebar = () => {
     dispatch(settogglesidebar(true));
   };
+  const { id, channelId, threadId } = useParams();
+  useEffect(() => {
+    axios.get(`/api/users/users/getusers`).then((response) => {
+      setUser(response.data);
+    });
+  }, [channelId]);
 
   return (
     <>
@@ -59,7 +68,7 @@ const ChatNavbar = () => {
               />
             </div>
             <div className="secondDivNoti relative">
-              <PopoverInput />
+              <PopoverInput users={User} />
             </div>
             <div className="thirdDivNoti"></div>
           </div>

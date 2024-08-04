@@ -93,18 +93,14 @@ const Cover = styled.div`
   padding-inline: 1rem;
   position: relative;
   padding-top: 0.8rem;
-  z-index: 2423;
+  z-index: 2422223;
   overflow: hidden;
-  /* padding-bottom: env(
-    safe-area-inset-bottom
-  ); // Use safe area inset if available */
+  padding-bottom: env(safe-area-inset-bottom);
 
   @media (max-width: 768px) {
-    /* padding-bottom: 4rem; */
-
-    /* padding-bottom: calc(
-      env(safe-area-inset-bottom) + 9.5rem
-    ); // Add additional padding on small devices */
+    padding-bottom: calc(
+      env(safe-area-inset-bottom) + 5rem
+    ); // Add additional padding on small devices
   }
 `;
 const Continer = styled.div`

@@ -84,10 +84,10 @@ const Cover = styled.div`
   z-index: 312321;
 
   @media (max-width: 768px) {
-    /* padding-bottom: 4rem;
+    padding-bottom: 4rem;
     padding-bottom: calc(
       env(safe-area-inset-bottom) + 9.5rem
-    ); // Add additional padding on small devices */
+    ); // Add additional padding on small devices
   }
 `;
 const Continer = styled.div`

@@ -11,7 +11,12 @@ const Profilephoto = ({ borderColor, borderWidth }) => {
 
   return (
     <>
-      <Cover onClick={() => dispatch(setprofilediv(true))}>
+      <Cover
+        onClick={(event) => {
+          event.stopPropagation();
+          dispatch(setprofilediv(true));
+        }}
+      >
         <img
           className="Style"
           src="https://cdn.discordapp.com/avatar-decoration-presets/a_629689577fa1da2ef0061a5a8c930de1.png?size=240&passthrough=true"

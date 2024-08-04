@@ -9,9 +9,11 @@ import ServerBar from "@/components/servers/Serverbar";
 import { ScrollArea } from "@ui/scroll-area";
 import { useSelector, useDispatch } from "react-redux";
 import { setMessageFlag } from "@/Redux/sessionSlice";
+import { useNavigate } from "react-router-dom";
 
 const Messages = () => {
   const [query, setquery] = useState("");
+  const navigate = useNavigate();
   const [users, setusers] = useState([]);
   const dispatch = useDispatch();
   const { MessageFlag } = useSelector((state) => state.counterSlice);
@@ -61,7 +63,30 @@ const Messages = () => {
                 user.username.toLowerCase().includes(query.toLowerCase())
               )
               .map((user) => (
-                <Link
+                <div
+                  className="Childcontainer "
+                  key={user._id}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate(`/@mobileme/${user._id}`);
+                  }}
+                >
+                  <div className="profilediv">
+                    <Profilephoto />
+                  </div>
+
+                  <p>{user.username}</p>
+                </div>
+              ))}
+          </ChatsMaindiv>
+        </ScrollArea>
+      </Cover>
+    </div>
+  );
+};
+
+{
+  /* <Link
                   exact
                   style={{ textDecoration: "none" }}
                   to={`/@mobileme/${user._id}`}
@@ -74,14 +99,8 @@ const Messages = () => {
 
                     <p>{user.username}</p>
                   </div>
-                </Link>
-              ))}
-          </ChatsMaindiv>
-        </ScrollArea>
-      </Cover>
-    </div>
-  );
-};
+                </Link> */
+}
 
 export default Messages;
 

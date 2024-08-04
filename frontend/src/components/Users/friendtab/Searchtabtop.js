@@ -4,13 +4,15 @@ import Buttonsection from "./Buttonsection";
 import styled from "styled-components";
 import DirectMessage from "./DirectMessage";
 import { Outlet } from "react-router-dom";
+import Statusdivbottom from "@/components/channels/Statusdivbottom";
 const Searchtabtop = () => {
   return (
     <Flex>
-      <Cover>
+      <Cover className="flex flex-col relative">
         <Top />
         <Buttonsection />
         <DirectMessage />
+        <Statusdivbottom />
       </Cover>
       <Outlet />
     </Flex>

@@ -73,7 +73,7 @@ const Cover = styled.div`
   background-color: #313338;
   overflow: hidden;
   @media (max-width: 768px) {
-    padding-bottom: 2rem;
+    padding-bottom: 4rem;
     padding-inline: 1rem;
   }
 `;

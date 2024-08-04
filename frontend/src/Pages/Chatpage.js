@@ -10,6 +10,7 @@ import axios from "axios";
 import Mainview from "@/components/Videocalling/Mainview";
 import MembersTab from "@/components/chats/MembersTab";
 import Swipeable from "../components/Helpers/Swipeable";
+import SearchResults from "@/components/Searchpart/SearchResults";
 const Chatpage = () => {
   const { createThread } = useSelector((state) => state.counterSlice);
   const { id, channelId } = useParams();
@@ -44,6 +45,7 @@ const Chatpage = () => {
               <Searcharea />
             </div>
             {/* <MembersTab /> */}
+            {/* {<SearchResults />} */}
           </div>
         </Cover>
       )}

@@ -208,7 +208,10 @@ const Createchannel = () => {
           <Mobilecontainer onClick={(e) => e.stopPropagation()}>
             <Firstdivmobile>
               <img
-                onClick={() => dispatch(setcreatechannelflag(false))}
+                onClick={() => {
+                  dispatch(settogglesidebar(true));
+                  dispatch(setcreatechannelflag(false));
+                }}
                 src={cross}
                 alt=""
               />

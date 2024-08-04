@@ -76,9 +76,6 @@ const Usernavbar = () => {
           <p>{user && user?.username}</p>
           {/* <img className="hiddenrightarrow" src={rightarrow} alt="" /> */}
         </Firstdiv>
-        <Secondiv>
-          <p>asdbasbdasbdbsdbasdasdasdasd</p>
-        </Secondiv>
       </div>
       <Thirddiv>
         <div className="Innerdiv">

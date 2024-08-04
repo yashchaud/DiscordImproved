@@ -72,19 +72,15 @@ const Serverbar = () => {
       setLocalsidebar(false);
       return;
     }
-    if (currentWidth < 768 && MessageFlag) {
+    if (currentWidth < 768 && MessageFlag === true) {
       setLocalsidebar(true);
       return;
     }
     if (currentWidth < 768 && MessageFlag === false) {
-      setLocalsidebar(false);
+      setLocalsidebar(true);
       return;
     }
 
-    if (currentWidth < 768 && createchannelflag) {
-      setLocalsidebar(false);
-      return;
-    }
     if (currentWidth < 768 && Categoryflag) {
       setLocalsidebar(false);
       return;
@@ -147,7 +143,7 @@ const Serverbar = () => {
                 <div
                   onClick={() => {
                     dispatch(settogglesidebar(true));
-                    setSelectedServer(value._id); // Update selected server
+                    setSelectedServer(value._id);
                   }}
                   key={id}
                 >
@@ -184,9 +180,9 @@ const Cover = styled.div`
   width: 4.5rem;
   min-width: 4.5rem;
   height: 100vh;
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     position: sticky;
-  }
+  } */
   z-index: 4000;
   background-color: #1e1f22;
   display: flex;

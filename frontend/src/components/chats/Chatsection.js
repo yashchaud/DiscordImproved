@@ -76,14 +76,15 @@ const Chatsection = () => {
   }, [realTimeMessages, initialMessages, channelId]);
 
   const groupMessages = (messages) => {
+    console.log(messages);
     if (!messages || !Array.isArray(messages)) return [];
     return messages.reduce((groups, message, index) => {
       const lastGroup = groups[groups.length - 1];
       const isNewGroup =
         !lastGroup ||
         message.user._id !== lastGroup[0].user._id ||
-        new Date(message.createdAt) -
-          new Date(lastGroup[lastGroup.length - 1].createdAt) >
+        new Date(message.timestamp) -
+          new Date(lastGroup[lastGroup.length - 1].timestamp) >
           120000;
 
       if (isNewGroup) {
@@ -132,7 +133,7 @@ const Chatsection = () => {
                   showHeader={msgIndex === 0}
                   msgcont={msg}
                   user={msg.user.username}
-                  timestamp={msg.createdAt}
+                  timestamp={msg.timestamp}
                 />
               ))}
             </div>
@@ -158,7 +159,7 @@ const Cover = styled.div`
 `;
 
 const Messagecontainer = styled.div`
-  min-height: 80vh;
+  min-height: 85vh;
   padding: 1rem;
   overflow-y: auto;
   gap: 0.6rem;
